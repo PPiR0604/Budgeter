@@ -112,7 +112,7 @@ class LoginPage extends StatelessWidget {
 }
 
 class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
+  const RegisterPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

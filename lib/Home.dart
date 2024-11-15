@@ -1,16 +1,15 @@
+import 'package:budgeter/Report.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  @override
-  // TODO: implement key
-  Key? get key => super.key;
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 240, 129, 65),
-          title: Text(
+          title: const Text(
             "Home",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
@@ -44,10 +43,10 @@ class HomePage extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.only(top: 10)),
           Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.only(left: 10, right: 10),
             height: 110,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(10),
               color: Colors.black12,
             ),
             child: summary_(),
@@ -63,23 +62,25 @@ class HomePage extends StatelessWidget {
             ],
           ),
           const Padding(padding: EdgeInsets.only(top: 10)),
-          menuBar()
+          menuBar(context),
         ]));
   }
 
-  Container menuBar() {
+  Container menuBar(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 10, right: 10),
+        margin: const EdgeInsets.only(left: 10, right: 10),
         height: 200,
         decoration: BoxDecoration(
-            color: Colors.black12, borderRadius: BorderRadius.circular(25)),
-        child: const Column(
+            color: Colors.black12, borderRadius: BorderRadius.circular(10)),
+        child:
+            Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
+              Expanded(
+                child: InkWell(
+                  onTap: () {},
+                  child: const Column(
                     children: [
                       Icon(
                         Icons.add,
@@ -88,16 +89,26 @@ class HomePage extends StatelessWidget {
                       Text("Pemasukan")
                     ],
                   ),
-                  Column(
-                    children: [
-                      Icon(
-                        Icons.input,
-                        size: 40,
-                      ),
-                      Text("Pengeluaran")
-                    ],
-                  ),
-                  Column(
+                ),
+              ),
+              const Expanded(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.input,
+                      size: 40,
+                    ),
+                    Text("Pengeluaran")
+                  ],
+                ),
+              ),
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ReportPage()));
+                  },
+                  child: const Column(
                     children: [
                       Icon(
                         Icons.book,
@@ -105,13 +116,18 @@ class HomePage extends StatelessWidget {
                       ),
                       Text("Laporan")
                     ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
+                  ),
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () {},
+                  child: const Column(
                     children: [
                       Icon(
                         Icons.savings,
@@ -120,27 +136,33 @@ class HomePage extends StatelessWidget {
                       Text("Tabungan")
                     ],
                   ),
-                  Column(
-                    children: [
-                      Icon(
-                        Icons.shopping_basket,
-                        size: 40,
-                      ),
-                      Text("Wishlist")
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Icon(
-                        Icons.currency_exchange,
-                        size: 40,
-                      ),
-                      Text("Edukasi")
-                    ],
-                  )
-                ],
+                ),
               ),
-            ]));
+              Expanded(
+                child: const Column(
+                  children: [
+                    Icon(
+                      Icons.shopping_basket,
+                      size: 40,
+                    ),
+                    Text("Wishlist")
+                  ],
+                ),
+              ),
+              Expanded(
+                child: const Column(
+                  children: [
+                    Icon(
+                      Icons.currency_exchange,
+                      size: 40,
+                    ),
+                    Text("Edukasi")
+                  ],
+                ),
+              )
+            ],
+          ),
+        ]));
   }
 
   Column summary_() {
@@ -157,24 +179,27 @@ class HomePage extends StatelessWidget {
           ],
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Container(
-            decoration: BoxDecoration(
-                border:
-                    Border(right: BorderSide(color: Colors.black, width: 2))),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Income"),
-                Text(
-                  "Rp100.000",
-                  style: TextStyle(fontSize: 17),
-                ),
-              ],
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                  border:
+                      Border(right: BorderSide(color: Colors.black, width: 2))),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Income"),
+                  Text(
+                    "Rp100.000",
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ],
+              ),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
+          Expanded(
+              child: Container(
+            decoration: const BoxDecoration(
                 border:
                     Border(right: BorderSide(color: Colors.black, width: 2))),
             child: const Column(
@@ -187,9 +212,10 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          Container(
-            child: const Column(
+          )),
+          Expanded(
+            child: Container(
+                child: const Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Balance"),
@@ -198,7 +224,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 17),
                 ),
               ],
-            ),
+            )),
           )
         ])
       ],
