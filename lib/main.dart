@@ -15,16 +15,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // colorScheme: ColorScheme.highContrastLight(),
+        colorSchemeSeed: Colors.orangeAccent,
         useMaterial3: true,
       ),
-      home: const LoginPage(title: 'Flutter Demo Home Page'),
+      home: const LoginPage(),
     );
   }
 }
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key, required String title});
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,7 @@ class LoginPage extends StatelessWidget {
         body: Center(
             child: Container(
       decoration: BoxDecoration(
-          color: const Color.fromARGB(136, 146, 146, 146),
-          borderRadius: BorderRadius.circular(25)),
+          color: Colors.black12, borderRadius: BorderRadius.circular(25)),
       width: 340,
       height: 320,
       child: Column(
@@ -119,8 +119,7 @@ class RegisterPage extends StatelessWidget {
         body: Center(
             child: Container(
       decoration: BoxDecoration(
-          color: const Color.fromARGB(136, 146, 146, 146),
-          borderRadius: BorderRadius.circular(25)),
+          color: Colors.black12, borderRadius: BorderRadius.circular(25)),
       width: 340,
       height: 400,
       child: Column(

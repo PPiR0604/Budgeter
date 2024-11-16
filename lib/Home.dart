@@ -1,4 +1,6 @@
 import 'package:budgeter/Report.dart';
+import 'package:budgeter/Wishlist.dart';
+import 'package:budgeter/settingPage.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -21,7 +23,10 @@ class HomePage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SettingPage()));
+              },
               icon: const Icon(
                 Icons.settings,
                 color: Colors.white,
@@ -30,43 +35,45 @@ class HomePage extends StatelessWidget {
             )
           ],
         ),
-        body: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Padding(padding: EdgeInsets.only(top: 30)),
-          const Row(
-            children: [
-              Padding(padding: EdgeInsets.only(right: 15)),
-              Text(
-                "Selamat datang, User!",
-                style: TextStyle(fontSize: 20),
-              )
-            ],
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          Container(
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            height: 110,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.black12,
+        body: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            const Padding(padding: EdgeInsets.only(top: 30)),
+            const Row(
+              children: [
+                Padding(padding: EdgeInsets.only(right: 15)),
+                Text(
+                  "Selamat datang, User!",
+                  style: TextStyle(fontSize: 20),
+                )
+              ],
             ),
-            child: summary_(),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 20)),
-          const Row(
-            children: [
-              Padding(padding: EdgeInsets.only(right: 15)),
-              Text(
-                "Fitur-Fitur",
-                style: TextStyle(fontSize: 20),
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            Container(
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              height: 110,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.black12,
               ),
-            ],
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          menuBar(context),
-        ]));
+              child: summary_(),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20)),
+            const Row(
+              children: [
+                Padding(padding: EdgeInsets.only(right: 15)),
+                Text(
+                  "Fitur-Fitur",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            menuSection(context),
+          ]),
+        ));
   }
 
-  Container menuBar(BuildContext context) {
+  Container menuSection(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(left: 10, right: 10),
         height: 200,
@@ -85,6 +92,7 @@ class HomePage extends StatelessWidget {
                       Icon(
                         Icons.add,
                         size: 40,
+                        color: Color.fromRGBO(63, 63, 63, 1),
                       ),
                       Text("Pemasukan")
                     ],
@@ -97,6 +105,7 @@ class HomePage extends StatelessWidget {
                     Icon(
                       Icons.input,
                       size: 40,
+                      color: Color.fromRGBO(63, 63, 63, 1),
                     ),
                     Text("Pengeluaran")
                   ],
@@ -113,6 +122,7 @@ class HomePage extends StatelessWidget {
                       Icon(
                         Icons.book,
                         size: 40,
+                        color: Color.fromRGBO(63, 63, 63, 1),
                       ),
                       Text("Laporan")
                     ],
@@ -132,6 +142,7 @@ class HomePage extends StatelessWidget {
                       Icon(
                         Icons.savings,
                         size: 40,
+                        color: Color.fromRGBO(63, 63, 63, 1),
                       ),
                       Text("Tabungan")
                     ],
@@ -139,22 +150,32 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: const Column(
-                  children: [
-                    Icon(
-                      Icons.shopping_basket,
-                      size: 40,
-                    ),
-                    Text("Wishlist")
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WishlistPage()));
+                  },
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.shopping_basket,
+                        size: 40,
+                        color: Color.fromRGBO(63, 63, 63, 1),
+                      ),
+                      Text("Wishlist")
+                    ],
+                  ),
                 ),
               ),
-              Expanded(
-                child: const Column(
+              const Expanded(
+                child: Column(
                   children: [
                     Icon(
                       Icons.currency_exchange,
                       size: 40,
+                      color: Color.fromRGBO(63, 63, 63, 1),
                     ),
                     Text("Edukasi")
                   ],
@@ -213,9 +234,8 @@ class HomePage extends StatelessWidget {
               ],
             ),
           )),
-          Expanded(
-            child: Container(
-                child: const Column(
+          const Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Balance"),
@@ -224,7 +244,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 17),
                 ),
               ],
-            )),
+            ),
           )
         ])
       ],

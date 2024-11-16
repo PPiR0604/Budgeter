@@ -1,5 +1,6 @@
 import 'package:budgeter/Entitas/Pemasukan.dart';
 import 'package:flutter/material.dart';
+import 'settingPage.dart';
 
 class ReportPage extends StatelessWidget {
   ReportPage({super.key});
@@ -43,7 +44,7 @@ class ReportPage extends StatelessWidget {
       "Hiburan",
       "Makanan"
     ];
-
+    double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 129, 65),
@@ -59,7 +60,10 @@ class ReportPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingPage()));
+            },
             icon: const Icon(
               Icons.settings,
               color: Colors.white,
@@ -133,21 +137,21 @@ class ReportPage extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 90,
+                  width: size * 0.23,
                   margin: const EdgeInsets.only(left: 20),
                   child: const Text(
                     "Bulan/\nKategori",
                     style: TextStyle(fontSize: 10),
                   ),
                 ),
-                const SizedBox(
-                  width: 150,
-                  child: Text("Title", style: TextStyle(fontSize: 10)),
+                SizedBox(
+                  width: size * 0.43,
+                  child: const Text("Title", style: TextStyle(fontSize: 10)),
                 ),
-                const Text("pemasukan", style: TextStyle(fontSize: 10))
+                const Text("Pemasukan", style: TextStyle(fontSize: 10))
               ],
             ),
-            incomeTable(),
+            incomeTable(size),
             const Padding(padding: EdgeInsets.all(20)),
             const Row(children: [
               Padding(padding: EdgeInsets.only(left: 10)),
@@ -161,22 +165,25 @@ class ReportPage extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  width: 90,
+                  width: size * 0.23,
                   margin: const EdgeInsets.only(left: 20),
                   child: const Text(
                     "Bulan/\nKategori",
                     style: TextStyle(fontSize: 10),
                   ),
                 ),
-                const SizedBox(
-                  width: 150,
-                  child: Text("Title", style: TextStyle(fontSize: 10)),
+                SizedBox(
+                  width: size * 0.43,
+                  child: const Text(
+                    "Title",
+                    style: TextStyle(fontSize: 10),
+                    softWrap: true,
+                  ),
                 ),
                 const Text("Pengeluaran", style: TextStyle(fontSize: 10))
               ],
             ),
-            Padding(padding: EdgeInsets.only(top: 20)),
-            outcomeTable()
+            outcomeTable(size)
           ],
         ),
       ),
@@ -229,25 +236,27 @@ class ReportPage extends StatelessWidget {
     );
   }
 
-  Container outcomeTable() {
+  Container outcomeTable(double size) {
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 5),
       height: 400,
       decoration: BoxDecoration(
-          // color: Colors.black12,
-          borderRadius: BorderRadius.circular(10)),
+          color: Colors.black12, borderRadius: BorderRadius.circular(10)),
       child: ListView(
         children: pemasukan.map((data) {
           return Container(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
-            margin: const EdgeInsets.only(top: 2, left: 5, right: 5),
+            margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.black12),
+              borderRadius: BorderRadius.circular(10),
+              color: const Color.fromRGBO(255, 248, 244, 1),
+            ),
             child: Row(
               children: [
                 const Padding(padding: EdgeInsets.only(left: 15)),
                 SizedBox(
-                    width: 80,
+                    width: size * 0.2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -262,9 +271,10 @@ class ReportPage extends StatelessWidget {
                       ],
                     )),
                 SizedBox(
-                    width: 120,
+                    width: size * 0.4,
                     child: Text(
                       data.nama,
+                      softWrap: true,
                       style: const TextStyle(fontSize: 13),
                     )),
                 const Icon(
@@ -283,25 +293,27 @@ class ReportPage extends StatelessWidget {
     );
   }
 
-  Container incomeTable() {
+  Container incomeTable(double size) {
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 5),
       height: 400,
       decoration: BoxDecoration(
-          // color: Colors.black12,
-          borderRadius: BorderRadius.circular(10)),
+          color: Colors.black12, borderRadius: BorderRadius.circular(10)),
       child: ListView(
         children: pemasukan.map((data) {
           return Container(
             padding: const EdgeInsets.only(top: 15, bottom: 15),
-            margin: const EdgeInsets.only(top: 2, left: 5, right: 5),
+            margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.black12),
+              borderRadius: BorderRadius.circular(10),
+              color: const Color.fromRGBO(255, 248, 244, 1),
+            ),
             child: Row(
               children: [
                 const Padding(padding: EdgeInsets.only(left: 15)),
                 SizedBox(
-                    width: 80,
+                    width: size * 0.2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -316,9 +328,10 @@ class ReportPage extends StatelessWidget {
                       ],
                     )),
                 SizedBox(
-                    width: 120,
+                    width: size * 0.4,
                     child: Text(
                       data.nama,
+                      softWrap: true,
                       style: const TextStyle(fontSize: 13),
                     )),
                 const Icon(
