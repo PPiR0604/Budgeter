@@ -59,7 +59,7 @@ class Wishlist {
 class Report {
   Report({
     required this.id,
-    required this.month,
+    required this.date,
     required this.balance,
     required this.totalIncome,
     required this.totalExpense,
@@ -67,7 +67,7 @@ class Report {
   });
 
   final int id;
-  final DateTime month;
+  final DateTime date;
   final int balance;
   final int totalIncome;
   final int totalExpense;
