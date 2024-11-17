@@ -1,4 +1,5 @@
 import 'package:budgeter/Report.dart';
+import 'package:budgeter/Tabungan.dart';
 import 'package:budgeter/Wishlist.dart';
 import 'package:budgeter/settingPage.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +137,12 @@ class HomePage extends StatelessWidget {
             children: [
               Expanded(
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TabunganPage()));
+                  },
                   child: const Column(
                     children: [
                       Icon(

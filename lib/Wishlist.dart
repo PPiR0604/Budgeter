@@ -147,50 +147,46 @@ class WishlistPage extends StatelessWidget {
       child: SizedBox(
         height: 400,
         child: ListView(
-            padding: const EdgeInsets.only(top: 5),
             children: WishlistList.map((data) {
-              return Container(
-                decoration: BoxDecoration(
-                    color: const Color.fromRGBO(255, 248, 244, 1),
-                    borderRadius: BorderRadius.circular(5)),
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                height: 50,
-                child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    SizedBox(
-                      width: size * 0.26,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(data.name),
-                          Text('Rp${data.amount}'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                        width: size * 0.38,
-                        child: const Text(
-                          "Analysis",
-                          softWrap: true,
-                        )),
-                    SizedBox(
-                      height: 20,
-                      width: 85,
-                      child: ElevatedButton(
-                        child: const Text(
-                          'Selesai',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {},
-                      ),
-                    )
-                  ],
+          return Card(
+            color: const Color.fromRGBO(255, 248, 244, 1),
+            margin: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Padding(padding: EdgeInsets.only(left: 10, top: 60)),
+                SizedBox(
+                  width: size * 0.26,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(data.name),
+                      Text('Rp${data.amount}'),
+                    ],
+                  ),
                 ),
-              );
-            }).toList()),
+                SizedBox(
+                    width: size * 0.38,
+                    child: const Text(
+                      "Analysis",
+                      softWrap: true,
+                    )),
+                SizedBox(
+                  height: 20,
+                  width: 85,
+                  child: ElevatedButton(
+                    child: const Text(
+                      'Selesai',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    onPressed: () {},
+                  ),
+                )
+              ],
+            ),
+          );
+        }).toList()),
       ),
     );
   }

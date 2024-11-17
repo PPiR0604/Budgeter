@@ -245,16 +245,12 @@ class ReportPage extends StatelessWidget {
           color: Colors.black12, borderRadius: BorderRadius.circular(10)),
       child: ListView(
         children: pemasukan.map((data) {
-          return Container(
-            padding: const EdgeInsets.only(top: 15, bottom: 15),
+          return Card(
             margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromRGBO(255, 248, 244, 1),
-            ),
+            color: const Color.fromRGBO(255, 248, 244, 1),
             child: Row(
               children: [
-                const Padding(padding: EdgeInsets.only(left: 15)),
+                const Padding(padding: EdgeInsets.only(left: 15, top: 60)),
                 SizedBox(
                     width: size * 0.2,
                     child: Column(
@@ -302,16 +298,12 @@ class ReportPage extends StatelessWidget {
           color: Colors.black12, borderRadius: BorderRadius.circular(10)),
       child: ListView(
         children: pemasukan.map((data) {
-          return Container(
-            padding: const EdgeInsets.only(top: 15, bottom: 15),
+          return Card(
             margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color.fromRGBO(255, 248, 244, 1),
-            ),
+            color: const Color.fromRGBO(255, 248, 244, 1),
             child: Row(
               children: [
-                const Padding(padding: EdgeInsets.only(left: 15)),
+                const Padding(padding: EdgeInsets.only(left: 15, top: 60)),
                 SizedBox(
                     width: size * 0.2,
                     child: Column(
@@ -378,7 +370,7 @@ class ReportPage extends StatelessWidget {
                     color: Colors.green,
                   ),
                   const Text(
-                    "pemasukan",
+                    "Pemasukan",
                     style: TextStyle(fontSize: 20),
                   ),
                   Text("Rp$_TotalPemasukan")
