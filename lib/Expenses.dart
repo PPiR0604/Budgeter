@@ -23,16 +23,16 @@ class ExpensesPage extends StatelessWidget {
               textAlign: TextAlign.left,
               style: theme.textTheme.headlineSmall,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             const TransactionInputSection(),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Riwayat pengeluaran',
               textAlign: TextAlign.left,
               style: theme.textTheme.headlineSmall,
             ),
-            SizedBox(height: 8),
-            TransactionList(),
+            const SizedBox(height: 8),
+            const TransactionList(),
           ],
         ),
       ),
@@ -50,6 +50,7 @@ class TransactionInputSection extends StatefulWidget {
 
 class _TransactionInputSectionState extends State<TransactionInputSection> {
   final _formKey = GlobalKey<FormState>();
+  final _categorySelectorKey = GlobalKey<_CategorySelectorState>();
   String? txnName;
   String? txnCategory;
   int? txnAmount;
@@ -85,6 +86,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
     txnAmount = null;
     txnDate = DateTime.now();
     _formKey.currentState!.reset();
+    _categorySelectorKey.currentState!.resetSelection();
   }
 
   @override
@@ -109,18 +111,19 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                   return null;
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // seleksi kategori pengeluaran
               Row(
                 children: [
                   Expanded(
                     child: CategorySelector(
+                      key: _categorySelectorKey,
                       onChange: (str) => _updateCategory(str),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // form jumlah pengeluaran
               CustomTextFormField(
                 labelText: 'Jumlah pengeluaran',
@@ -133,12 +136,12 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                   return null;
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // form seleksi tanggal dan waktu
               CustomDateTimeFormFields(
                 onSaved: (date) => _updateDate(date!),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               // tombol simpan pengeluaran
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -182,6 +185,7 @@ class CategorySelector extends StatefulWidget {
 }
 
 class _CategorySelectorState extends State<CategorySelector> {
+  // buat sementara
   var categoryList = [
     'kebutuhan pokok',
     'makanan',
@@ -202,16 +206,16 @@ class _CategorySelectorState extends State<CategorySelector> {
     final theme = Theme.of(context);
 
     var gridEntries = categoryList.asMap().entries.map((entry) {
-      if (selectedIndex == entry.key) {}
-      return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            backgroundColor:
-                selectedIndex == entry.key ? Colors.blue : Colors.white),
-        onPressed: () {
-          selectedIndex = entry.key;
-          widget.onChange(entry.value);
-        },
-        child: Text(entry.value),
+      return SelectorButton(
+        text: entry.value,
+        isSelected: selectedIndex == entry.key,
+        onToggle: () => setState(() {
+          if (selectedIndex == entry.key) {
+            selectedIndex = null;
+          } else {
+            selectedIndex = entry.key;
+          }
+        }),
       );
     }).toList();
 
@@ -223,7 +227,7 @@ class _CategorySelectorState extends State<CategorySelector> {
           textAlign: TextAlign.left,
           style: theme.textTheme.labelLarge,
         ),
-        SizedBox(
+        const SizedBox(
           height: 4,
         ),
         Wrap(
@@ -232,6 +236,34 @@ class _CategorySelectorState extends State<CategorySelector> {
           children: gridEntries,
         )
       ],
+    );
+  }
+}
+
+class SelectorButton extends StatelessWidget {
+  final String text;
+  final bool isSelected;
+  final Function? onToggle;
+
+  const SelectorButton({
+    super.key,
+    required this.text,
+    required this.isSelected,
+    this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+          backgroundColor: isSelected ? Colors.blue : Colors.white),
+      onPressed: () {
+        if (onToggle == null) {
+          return;
+        }
+        onToggle!();
+      },
+      child: Text(text),
     );
   }
 }
@@ -253,7 +285,7 @@ class TransactionList extends StatelessWidget {
                 snapshot.data!.map((txn) => TransactionCard(tsc: txn)).toList(),
           );
         } else {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
       },
     );
@@ -283,14 +315,14 @@ class TransactionCard extends StatelessWidget {
                   child: Text(
                     dateFormatter.format(tsc.date),
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
                 Expanded(
                   child: Text(
                     timeFormatter.format(tsc.date),
                     textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
               ],
@@ -304,7 +336,7 @@ class TransactionCard extends StatelessWidget {
                       Text(
                         tsc.name,
                         textAlign: TextAlign.start,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -312,7 +344,7 @@ class TransactionCard extends StatelessWidget {
                       Text(
                         tsc.category ?? 'No Category',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),
