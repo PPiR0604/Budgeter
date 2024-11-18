@@ -18,7 +18,7 @@ Future<void> createTables(Database connection, int version) async {
 
 class UserDatabase extends ChangeNotifier {
   final Database connection;
-  
+
   UserDatabase(this.connection);
 
   /// Ambil data transaksi untuk bulan dan tahun tertentu

@@ -1,23 +1,31 @@
 import 'package:budgeter/Home.dart';
 import 'package:budgeter/logic.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  var path = 'data.db';
+  if (kIsWeb) {
+    // Change default factory on the web
+    databaseFactory = databaseFactoryFfiWeb;
+    path = 'web_data.db';
+  }
+
   final dbConnection = await openDatabase(
-    join(await getDatabasesPath(), 'data.db'),
+    join(await getDatabasesPath(), path),
     onCreate: (db, version) async => await createTables(db, version),
     version: 1,
   );
 
   runApp(ChangeNotifierProvider(
-    create: (context) => UserDatabase(dbConnection),
-    child: MyApp()
-  ));
+      create: (context) => UserDatabase(dbConnection), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

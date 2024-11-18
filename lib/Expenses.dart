@@ -4,6 +4,7 @@ import 'package:budgeter/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'settingPage.dart';
 
 class ExpensesPage extends StatelessWidget {
   const ExpensesPage({super.key});
@@ -13,26 +14,72 @@ class ExpensesPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pengeluaran')),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 240, 129, 65),
+        title: const Text(
+          "Pengeluaran",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+          iconSize: 40,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingPage()));
+            },
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+            iconSize: 40,
+          )
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(top: 15),
         child: ListView(
           children: [
-            Text(
-              'Input pengeluaran',
-              textAlign: TextAlign.left,
-              style: theme.textTheme.headlineSmall,
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    size: 35,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 8),
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            Row(
+              children: [
+                const Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Input Pengeluaran',
+                  textAlign: TextAlign.left,
+                  style: theme.textTheme.headlineSmall,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             const TransactionInputSection(),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Riwayat pengeluaran',
               textAlign: TextAlign.left,
               style: theme.textTheme.headlineSmall,
             ),
-            SizedBox(height: 8),
-            TransactionList(),
+            const SizedBox(height: 8),
+            const TransactionList(),
           ],
         ),
       ),
@@ -91,6 +138,8 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
   Widget build(BuildContext context) {
     final value = context.watch<UserDatabase>();
     return Card(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      color: Colors.white60,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -104,12 +153,12 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                 onSaved: (name) => _updateName(name!),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'please input some value';
+                    return 'Please input some value';
                   }
                   return null;
                 },
               ),
-              SizedBox(height: 8),
+              const Padding(padding: EdgeInsets.only(top: 10)),
               // seleksi kategori pengeluaran
               Row(
                 children: [
@@ -120,7 +169,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // form jumlah pengeluaran
               CustomTextFormField(
                 labelText: 'Jumlah pengeluaran',
@@ -133,12 +182,12 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                   return null;
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // form seleksi tanggal dan waktu
               CustomDateTimeFormFields(
                 onSaved: (date) => _updateDate(date!),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               // tombol simpan pengeluaran
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -183,11 +232,11 @@ class CategorySelector extends StatefulWidget {
 
 class _CategorySelectorState extends State<CategorySelector> {
   var categoryList = [
-    'kebutuhan pokok',
-    'makanan',
-    'alat tulis',
-    'kebutuhan kuliah',
-    'uang kas'
+    'Kebutuhan pokok',
+    'Makanan',
+    'Alat tulis',
+    'Kebutuhan kuliah',
+    'Uang kas'
   ];
   int? selectedIndex;
 
@@ -203,15 +252,25 @@ class _CategorySelectorState extends State<CategorySelector> {
 
     var gridEntries = categoryList.asMap().entries.map((entry) {
       if (selectedIndex == entry.key) {}
-      return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            backgroundColor:
-                selectedIndex == entry.key ? Colors.blue : Colors.white),
-        onPressed: () {
-          selectedIndex = entry.key;
-          widget.onChange(entry.value);
-        },
-        child: Text(entry.value),
+      return Container(
+        margin: const EdgeInsets.all(5),
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+              backgroundColor: selectedIndex == entry.key
+                  ? const Color.fromARGB(169, 243, 163, 33)
+                  : Colors.white),
+          onPressed: () {
+            selectedIndex = entry.key;
+            widget.onChange(entry.value);
+          },
+          child: Text(
+            entry.value,
+            style: TextStyle(
+                color: selectedIndex == entry.key
+                    ? Colors.white
+                    : const Color.fromARGB(169, 243, 163, 33)),
+          ),
+        ),
       );
     }).toList();
 
@@ -223,7 +282,7 @@ class _CategorySelectorState extends State<CategorySelector> {
           textAlign: TextAlign.left,
           style: theme.textTheme.labelLarge,
         ),
-        SizedBox(
+        const SizedBox(
           height: 4,
         ),
         Wrap(
@@ -253,7 +312,7 @@ class TransactionList extends StatelessWidget {
                 snapshot.data!.map((txn) => TransactionCard(tsc: txn)).toList(),
           );
         } else {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
       },
     );
@@ -283,14 +342,14 @@ class TransactionCard extends StatelessWidget {
                   child: Text(
                     dateFormatter.format(tsc.date),
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
                 Expanded(
                   child: Text(
                     timeFormatter.format(tsc.date),
                     textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
               ],
@@ -304,7 +363,7 @@ class TransactionCard extends StatelessWidget {
                       Text(
                         tsc.name,
                         textAlign: TextAlign.start,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -312,7 +371,7 @@ class TransactionCard extends StatelessWidget {
                       Text(
                         tsc.category ?? 'No Category',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),

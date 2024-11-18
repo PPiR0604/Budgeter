@@ -112,10 +112,8 @@ class HomePage extends StatelessWidget {
                       Text("Pengeluaran")
                     ],
                   ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ExpensesPage())
-                  ),
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ExpensesPage())),
                 ),
               ),
               Expanded(

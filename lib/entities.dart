@@ -13,7 +13,6 @@ class Transaction {
   final DateTime date;
   final TransactionType type;
   final String? category;
-
 }
 
 enum TransactionType { income, expense }
@@ -27,13 +26,12 @@ class Bill {
     required this.dueDate,
     required this.interval,
   });
-  
+
   final String name;
   final int amount;
   final double interest;
   final DateTime dueDate;
   final int interval;
-
 }
 
 /// Class yang merepresentasikan wishlist
@@ -64,5 +62,4 @@ class Report {
   final int totalIncome;
   final int totalExpense;
   final List<Transaction> transactions;
-
 }

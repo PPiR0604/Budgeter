@@ -263,7 +263,7 @@ class _CustomDateTimeFormFieldsState extends State<CustomDateTimeFormFields> {
                   selectedDate.hour,
                   selectedDate.minute,
                 );
-                
+
                 _updateControllerDateText(selectedDate);
               });
             },

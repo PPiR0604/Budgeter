@@ -1,4 +1,5 @@
 import 'package:budgeter/Entitas/WishlistData.dart';
+import 'package:budgeter/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'settingPage.dart';
@@ -83,7 +84,7 @@ class WishlistPage extends StatelessWidget {
               ],
             ),
             Container(
-              height: 230,
+              height: 260,
               width: 400,
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -94,27 +95,19 @@ class WishlistPage extends StatelessWidget {
                   const Padding(padding: EdgeInsets.only(top: 20)),
                   const SizedBox(
                     width: 330,
-                    height: 55,
-                    child: TextField(
-                      decoration: InputDecoration(
-                          hintText: 'Mobil, Rumah, Sepeda, Motor',
-                          labelText: 'Nama Barang',
-                          labelStyle: TextStyle(fontSize: 15)),
-                      style: TextStyle(fontSize: 15),
+                    height: 75,
+                    child: CustomTextFormField(
+                      keyboardType: TextInputType.number,
+                      labelText: "Harga Barang",
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 15)),
-                  SizedBox(
+                  const SizedBox(
                     width: 330,
-                    height: 55,
-                    child: TextField(
+                    height: 75,
+                    child: CustomTextFormField(
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                          hintText: 'Rp',
-                          labelText: 'Harga Barang',
-                          labelStyle: TextStyle(fontSize: 15)),
-                      style: const TextStyle(fontSize: 15),
+                      labelText: "Harga Barang",
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 20)),
