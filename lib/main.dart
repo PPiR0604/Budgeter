@@ -1,14 +1,28 @@
 import 'package:budgeter/Home.dart';
+import 'package:budgeter/logic.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final dbConnection = await openDatabase(
+    join(await getDatabasesPath(), 'data.db'),
+    onCreate: (db, version) async => await createTables(db, version),
+    version: 1,
+  );
+
+  runApp(ChangeNotifierProvider(
+    create: (context) => UserDatabase(dbConnection),
+    child: MyApp()
+  ));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

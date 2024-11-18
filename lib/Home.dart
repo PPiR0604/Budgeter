@@ -1,4 +1,5 @@
 import 'package:budgeter/Report.dart';
+import 'package:budgeter/Expenses.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -91,15 +92,21 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const Expanded(
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.input,
-                      size: 40,
-                    ),
-                    Text("Pengeluaran")
-                  ],
+              Expanded(
+                child: InkWell(
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.input,
+                        size: 40,
+                      ),
+                      Text("Pengeluaran")
+                    ],
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ExpensesPage())
+                  ),
                 ),
               ),
               Expanded(

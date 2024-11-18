@@ -12,7 +12,7 @@ class Transaction {
   final int amount;
   final DateTime date;
   final TransactionType type;
-  final String category;
+  final String? category;
 
 }
 
