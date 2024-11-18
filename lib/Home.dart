@@ -2,6 +2,7 @@ import 'package:budgeter/Report.dart';
 import 'package:budgeter/Tabungan.dart';
 import 'package:budgeter/Wishlist.dart';
 import 'package:budgeter/settingPage.dart';
+import 'package:budgeter/Expenses.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -100,16 +101,21 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const Expanded(
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.input,
-                      size: 40,
-                      color: Color.fromRGBO(63, 63, 63, 1),
-                    ),
-                    Text("Pengeluaran")
-                  ],
+              Expanded(
+                child: InkWell(
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.input,
+                        size: 40,
+                      ),
+                      Text("Pengeluaran")
+                    ],
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ExpensesPage())
+                  ),
                 ),
               ),
               Expanded(
