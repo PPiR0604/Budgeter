@@ -71,13 +71,17 @@ class ExpensesPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
+            const SizedBox(height: 8),
             const TransactionInputSection(),
+            const SizedBox(height: 16),
             const SizedBox(height: 16),
             Text(
               'Riwayat pengeluaran',
               textAlign: TextAlign.left,
               style: theme.textTheme.headlineSmall,
             ),
+            const SizedBox(height: 8),
+            const TransactionList(),
             const SizedBox(height: 8),
             const TransactionList(),
           ],
@@ -97,6 +101,7 @@ class TransactionInputSection extends StatefulWidget {
 
 class _TransactionInputSectionState extends State<TransactionInputSection> {
   final _formKey = GlobalKey<FormState>();
+  final _categorySelectorKey = GlobalKey<_CategorySelectorState>();
   String? txnName;
   String? txnCategory;
   int? txnAmount;
@@ -132,6 +137,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
     txnAmount = null;
     txnDate = DateTime.now();
     _formKey.currentState!.reset();
+    _categorySelectorKey.currentState!.resetSelection();
   }
 
   @override
@@ -164,6 +170,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                 children: [
                   Expanded(
                     child: CategorySelector(
+                      key: _categorySelectorKey,
                       onChange: (str) => _updateCategory(str),
                     ),
                   ),
@@ -183,10 +190,12 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                 },
               ),
               const SizedBox(height: 8),
+              const SizedBox(height: 8),
               // form seleksi tanggal dan waktu
               CustomDateTimeFormFields(
                 onSaved: (date) => _updateDate(date!),
               ),
+              const SizedBox(width: 8),
               const SizedBox(width: 8),
               // tombol simpan pengeluaran
               Padding(
@@ -231,6 +240,7 @@ class CategorySelector extends StatefulWidget {
 }
 
 class _CategorySelectorState extends State<CategorySelector> {
+  // buat sementara
   var categoryList = [
     'Kebutuhan pokok',
     'Makanan',
@@ -291,6 +301,34 @@ class _CategorySelectorState extends State<CategorySelector> {
           children: gridEntries,
         )
       ],
+    );
+  }
+}
+
+class SelectorButton extends StatelessWidget {
+  final String text;
+  final bool isSelected;
+  final Function? onToggle;
+
+  const SelectorButton({
+    super.key,
+    required this.text,
+    required this.isSelected,
+    this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+          backgroundColor: isSelected ? Colors.blue : Colors.white),
+      onPressed: () {
+        if (onToggle == null) {
+          return;
+        }
+        onToggle!();
+      },
+      child: Text(text),
     );
   }
 }
