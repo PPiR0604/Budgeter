@@ -54,25 +54,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String? _username;
-  String? _password;
-  User? dataUser;
-
   TextEditingController UserContr = TextEditingController();
   TextEditingController PassContr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  void UpdateUsername(String username) {
-    setState(() {
-      _username = username;
-    });
-  }
-
-  void UpdatePassword(String password) {
-    setState(() {
-      _password = password;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: BoxDecoration(
             color: Colors.black12, borderRadius: BorderRadius.circular(25)),
         width: 340,
-        height: 320,
+        height: 350,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -100,10 +84,9 @@ class _LoginPageState extends State<LoginPage> {
             const Padding(padding: EdgeInsets.only(top: 12)),
             SizedBox(
               width: 280,
-              height: 40,
+              height: 70,
               child: TextFormField(
                 controller: UserContr,
-                onSaved: (numString) => UpdateUsername,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "please input some value";
@@ -114,17 +97,16 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Masukkan Username Anda',
                     labelText: 'Username',
                     labelStyle: TextStyle(fontSize: 13)),
-                style: const TextStyle(fontSize: 10),
+                style: const TextStyle(fontSize: 13),
               ),
             ),
             const Padding(padding: EdgeInsets.all(2)),
             SizedBox(
               width: 280,
-              height: 40,
+              height: 70,
               child: TextFormField(
                 obscureText: true,
                 controller: PassContr,
-                onSaved: (numString) => UpdatePassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "please input some value";
@@ -135,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Masukkan Password Anda',
                     labelText: 'Password',
                     labelStyle: TextStyle(fontSize: 13)),
-                style: const TextStyle(fontSize: 10),
+                style: const TextStyle(fontSize: 13),
               ),
             ),
             const Padding(padding: EdgeInsets.all(10)),
@@ -208,42 +190,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String? _username;
-
-  String? _email;
-
-  String? _password;
-
-  String? _konfriPass;
-
   final _formKey = GlobalKey<FormState>();
   TextEditingController usernameControler = TextEditingController();
   TextEditingController emailControler = TextEditingController();
   TextEditingController passwordControler = TextEditingController();
-
-  void UpdateUsername(String username) {
-    setState(() {
-      _username = username;
-    });
-  }
-
-  void UpdatePassword(String password) {
-    setState(() {
-      _password = password;
-    });
-  }
-
-  void UpdateEmail(String email) {
-    setState(() {
-      _email = email;
-    });
-  }
-
-  void UpdateKonfPass(String KonfiPass) {
-    setState(() {
-      _konfriPass = KonfiPass;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
             decoration: BoxDecoration(
                 color: Colors.black12, borderRadius: BorderRadius.circular(25)),
             width: 340,
-            height: 400,
+            height: 500,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -267,15 +217,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const Text(
                   "Selamat Datang! Daftarkan diri Anda!",
-                  style: TextStyle(fontSize: 10),
+                  style: TextStyle(fontSize: 13),
                 ),
                 const Padding(padding: EdgeInsets.only(top: 12)),
                 SizedBox(
                   width: 280,
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     controller: usernameControler,
-                    onSaved: (numString) => UpdateUsername,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "please input some value";
@@ -286,16 +235,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: 'Masukkan Username Anda',
                         labelText: 'Username',
                         labelStyle: TextStyle(fontSize: 13)),
-                    style: const TextStyle(fontSize: 10),
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
-                const Padding(padding: EdgeInsets.only(top: 12)),
                 SizedBox(
                   width: 280,
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     controller: emailControler,
-                    onSaved: (numString) => UpdateEmail,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "please input some value";
@@ -306,17 +253,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: 'someone@example.com',
                         labelText: 'Email',
                         labelStyle: TextStyle(fontSize: 13)),
-                    style: const TextStyle(fontSize: 10),
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
-                const Padding(padding: EdgeInsets.all(2)),
                 SizedBox(
                   width: 280,
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     obscureText: true,
                     controller: passwordControler,
-                    onSaved: (numString) => UpdatePassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "please input some value";
@@ -327,16 +272,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: 'Masukkan Password Anda',
                         labelText: 'Password',
                         labelStyle: TextStyle(fontSize: 13)),
-                    style: const TextStyle(fontSize: 10),
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
-                const Padding(padding: EdgeInsets.all(2)),
                 SizedBox(
                   width: 280,
-                  height: 40,
+                  height: 70,
                   child: TextFormField(
                     obscureText: true,
-                    onSaved: (numString) => UpdateKonfPass,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "please input some value";
@@ -351,7 +294,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         hintText: 'Masukkan Password Anda sekali lagi',
                         labelText: 'Konfirmasi Password',
                         labelStyle: TextStyle(fontSize: 13)),
-                    style: const TextStyle(fontSize: 10),
+                    style: const TextStyle(fontSize: 13),
                   ),
                 ),
                 const Padding(padding: EdgeInsets.all(10)),

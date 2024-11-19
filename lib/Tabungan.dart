@@ -11,7 +11,7 @@ class TabunganPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 129, 65),
         title: const Text(
-          "Wishlist",
+          "Tabungan",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,

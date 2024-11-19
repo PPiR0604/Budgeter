@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'settingPage.dart';
 
-class ExpensesPage extends StatelessWidget {
-  const ExpensesPage({super.key});
+class IncomePage extends StatelessWidget {
+  const IncomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ExpensesPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 129, 65),
         title: const Text(
-          "Pengeluaran",
+          "Pemasukan",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
@@ -64,19 +64,22 @@ class ExpensesPage extends StatelessWidget {
               children: [
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 Text(
-                  'Input Pengeluaran',
+                  'Input Pemasukan',
                   textAlign: TextAlign.left,
                   style: theme.textTheme.headlineSmall,
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            const TransactionInputSection(),
+            const TransactionIncomeInputSection(),
             const SizedBox(height: 16),
-            Text(
-              'Riwayat pengeluaran',
-              textAlign: TextAlign.left,
-              style: theme.textTheme.headlineSmall,
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Riwayat Pemasukan',
+                textAlign: TextAlign.left,
+                style: theme.textTheme.headlineSmall,
+              ),
             ),
             const SizedBox(height: 8),
             const TransactionList(),
@@ -87,15 +90,16 @@ class ExpensesPage extends StatelessWidget {
   }
 }
 
-class TransactionInputSection extends StatefulWidget {
-  const TransactionInputSection({super.key});
+class TransactionIncomeInputSection extends StatefulWidget {
+  const TransactionIncomeInputSection({super.key});
 
   @override
-  State<TransactionInputSection> createState() =>
+  State<TransactionIncomeInputSection> createState() =>
       _TransactionInputSectionState();
 }
 
-class _TransactionInputSectionState extends State<TransactionInputSection> {
+class _TransactionInputSectionState
+    extends State<TransactionIncomeInputSection> {
   final _formKey = GlobalKey<FormState>();
   final _categorySelectorKey = GlobalKey<_CategorySelectorState>();
   String? txnName;
@@ -151,7 +155,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
             children: [
               // form nama pengeluaran
               CustomTextFormField(
-                labelText: 'Nama pengeluaran',
+                labelText: 'Nama Pemasukan',
                 onSaved: (name) => _updateName(name!),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -175,7 +179,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
               const SizedBox(height: 8),
               // form jumlah pengeluaran
               CustomTextFormField(
-                labelText: 'Jumlah pengeluaran',
+                labelText: 'Jumlah Pemasukan',
                 keyboardType: TextInputType.number,
                 onSaved: (numString) => _updateAmount(int.parse(numString!)),
                 validator: (value) {
@@ -201,7 +205,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
 
                     final transaction = Transaction(
                       name: txnName!,
-                      amount: txnAmount! * -1,
+                      amount: txnAmount!,
                       category: txnCategory,
                       date: txnDate!,
                       type: TransactionType.expense,
@@ -210,7 +214,7 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                     value.pushTransaction(transaction);
                     clearInput();
                   },
-                  child: const Text('Simpan pengeluaran'),
+                  child: const Text('Simpan Pemasukan'),
                 ),
               )
             ],
@@ -235,13 +239,7 @@ class CategorySelector extends StatefulWidget {
 
 class _CategorySelectorState extends State<CategorySelector> {
   // buat sementara
-  var categoryList = [
-    'Kebutuhan pokok',
-    'Makanan',
-    'Alat tulis',
-    'Kebutuhan kuliah',
-    'Uang kas'
-  ];
+  var categoryList = ['Gaji', 'Uang Saku', 'Warisan', 'Profit', 'Bonus'];
   int? selectedIndex;
 
   void resetSelection() {
@@ -362,7 +360,7 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (tsc.type == TransactionType.income) {
+    if (tsc.type == TransactionType.expense) {
       return const SizedBox();
     }
     return Card(

@@ -47,7 +47,6 @@ class UserDatabase extends ChangeNotifier {
 
       transactions.add(transaction);
     }
-    print(await connection.rawQuery('SELECT * FROM user'));
 
     return transactions;
   }

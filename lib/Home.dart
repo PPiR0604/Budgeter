@@ -1,6 +1,7 @@
+import 'package:budgeter/Income.dart';
 import 'package:budgeter/Report.dart';
 import 'package:budgeter/Tabungan.dart';
-import 'package:budgeter/Wishlist.dart';
+import 'package:budgeter/WishlistPage.dart';
 import 'package:budgeter/entities.dart';
 import 'package:budgeter/settingPage.dart';
 import 'package:budgeter/Expenses.dart';
@@ -92,7 +93,10 @@ class HomePage extends StatelessWidget {
             children: [
               Expanded(
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => IncomePage()));
+                  },
                   child: const Column(
                     children: [
                       Icon(
