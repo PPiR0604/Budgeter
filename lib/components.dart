@@ -34,7 +34,7 @@ class CustomTextFormField extends StatelessWidget {
           textAlign: TextAlign.left,
           style: theme.textTheme.labelLarge,
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         TextFormField(
           keyboardType: keyboardType,
           readOnly: readOnly ?? false,
@@ -43,7 +43,7 @@ class CustomTextFormField extends StatelessWidget {
           validator: validator,
           onSaved: onSaved,
           onTap: onTap,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(
               vertical: 0,
@@ -97,7 +97,7 @@ class _CustomInputDatePickerFormFieldState
           textAlign: TextAlign.left,
           style: theme.textTheme.labelLarge,
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         CustomTextFormField(
           labelText: 'T',
           onTap: () async {
@@ -156,12 +156,12 @@ class _CustomInputTimePickerFormFieldState
           textAlign: TextAlign.left,
           style: theme.textTheme.labelLarge,
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         TextFormField(
           readOnly: true,
           controller: controller,
           enableInteractiveSelection: false,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(
               vertical: 0,
@@ -269,7 +269,7 @@ class _CustomDateTimeFormFieldsState extends State<CustomDateTimeFormFields> {
             },
           ),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         // time field
         Expanded(
           child: CustomTextFormField(

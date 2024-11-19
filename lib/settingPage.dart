@@ -1,9 +1,8 @@
 import 'package:budgeter/main.dart';
 import 'package:flutter/material.dart';
-import 'Tabungan.dart';
 
 class SettingPage extends StatelessWidget {
-  SettingPage({Key? key}) : super(key: key);
+  const SettingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

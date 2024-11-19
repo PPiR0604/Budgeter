@@ -62,7 +62,7 @@ class ReportPage extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingPage()));
+                  MaterialPageRoute(builder: (context) => const SettingPage()));
             },
             icon: const Icon(
               Icons.settings,

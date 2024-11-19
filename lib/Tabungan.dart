@@ -4,7 +4,7 @@ import 'settingPage.dart';
 
 class TabunganPage extends StatelessWidget {
   TabunganPage({super.key});
-  int _TotalPemasukan = 800000;
+  final int _TotalPemasukan = 800000;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +24,7 @@ class TabunganPage extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingPage()));
+                  MaterialPageRoute(builder: (context) => const SettingPage()));
             },
             icon: const Icon(
               Icons.settings,
@@ -86,7 +86,7 @@ class TabunganPage extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.arrow_downward,
                             color: Colors.green,
                           ),
@@ -97,7 +97,7 @@ class TabunganPage extends StatelessWidget {
                           ),
                           Text(
                             "Rp$_TotalPemasukan",
-                            style: TextStyle(fontSize: 18),
+                            style: const TextStyle(fontSize: 18),
                           ),
                           const Text(
                             "Tabungan selama ini",
@@ -126,7 +126,7 @@ class TabunganPage extends StatelessWidget {
                           "Rp 1000000",
                           style: TextStyle(fontSize: 18),
                         ),
-                        const Text(
+                        Text(
                           "Pengeluaran selama ini",
                           softWrap: true,
                           textAlign: TextAlign.center,
@@ -138,7 +138,7 @@ class TabunganPage extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: 20)),
+            const Padding(padding: EdgeInsets.only(top: 20)),
             SizedBox(
               child: Row(
                 children: [

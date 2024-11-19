@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
             IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SettingPage()));
+                    MaterialPageRoute(builder: (context) => const SettingPage()));
               },
               icon: const Icon(
                 Icons.settings,
@@ -113,7 +113,7 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                   onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ExpensesPage())),
+                      MaterialPageRoute(builder: (context) => const ExpensesPage())),
                 ),
               ),
               Expanded(

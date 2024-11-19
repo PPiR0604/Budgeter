@@ -30,7 +30,7 @@ class ExpensesPage extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingPage()));
+                  MaterialPageRoute(builder: (context) => const SettingPage()));
             },
             icon: const Icon(
               Icons.settings,
@@ -71,17 +71,13 @@ class ExpensesPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const SizedBox(height: 8),
             const TransactionInputSection(),
-            const SizedBox(height: 16),
             const SizedBox(height: 16),
             Text(
               'Riwayat pengeluaran',
               textAlign: TextAlign.left,
               style: theme.textTheme.headlineSmall,
             ),
-            const SizedBox(height: 8),
-            const TransactionList(),
             const SizedBox(height: 8),
             const TransactionList(),
           ],
@@ -190,12 +186,10 @@ class _TransactionInputSectionState extends State<TransactionInputSection> {
                 },
               ),
               const SizedBox(height: 8),
-              const SizedBox(height: 8),
               // form seleksi tanggal dan waktu
               CustomDateTimeFormFields(
                 onSaved: (date) => _updateDate(date!),
               ),
-              const SizedBox(width: 8),
               const SizedBox(width: 8),
               // tombol simpan pengeluaran
               Padding(

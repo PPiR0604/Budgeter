@@ -102,7 +102,7 @@ class LoginPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
+                      MaterialPageRoute(builder: (context) => const HomePage()));
                 },
                 style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.black54)),
@@ -118,7 +118,7 @@ class LoginPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()));
+                      MaterialPageRoute(builder: (context) => const RegisterPage()));
                 },
                 style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.white70)),
