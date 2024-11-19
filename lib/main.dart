@@ -25,7 +25,9 @@ void main() async {
   );
 
   runApp(ChangeNotifierProvider(
-      create: (context) => UserDatabase(dbConnection), child: const MyApp()));
+    create: (context) => UserDatabase(dbConnection),
+    child: const MyApp()
+  ));
 }
 
 class MyApp extends StatelessWidget {

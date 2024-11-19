@@ -142,6 +142,7 @@ class UserDatabase extends ChangeNotifier {
       final estimatedPurchaseDate =
           DateTime.fromMillisecondsSinceEpoch(rawEstimatedPurchaseDate);
       wishlists.add(entity.Wishlist(
+        id: id,
         name: name,
         price: price,
         estimatedDate: estimatedPurchaseDate,
