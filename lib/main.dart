@@ -1,8 +1,8 @@
 import 'package:budgeter/Home.dart';
+import 'package:budgeter/entities.dart';
 import 'package:budgeter/logic.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,9 +22,8 @@ void main() async {
   final dbConnection = await openDatabase(
     join(await getDatabasesPath(), path),
     onCreate: (db, version) async => await createTables(db, version),
-    version: 1,
+    version: 4,
   );
-
   runApp(ChangeNotifierProvider(
       create: (context) => UserDatabase(dbConnection), child: const MyApp()));
 }
@@ -42,13 +41,13 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.orangeAccent,
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: LoginPage(context),
     );
   }
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  LoginPage(BuildContext context, {super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -57,7 +56,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String? _username;
   String? _password;
+  User? dataUser;
 
+  TextEditingController UserContr = TextEditingController();
+  TextEditingController PassContr = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   void UpdateUsername(String username) {
@@ -100,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 280,
               height: 40,
               child: TextFormField(
+                controller: UserContr,
                 onSaved: (numString) => UpdateUsername,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -120,6 +123,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 40,
               child: TextFormField(
                 obscureText: true,
+                controller: PassContr,
                 onSaved: (numString) => UpdatePassword,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -139,13 +143,30 @@ class _LoginPageState extends State<LoginPage> {
                 width: 280,
                 height: 30,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
                     _formKey.currentState!.save();
-                    Navigator.pushReplacement(
+                    final database = context.read<UserDatabase>();
+                    final userList =
+                        await database.Login(UserContr.text, PassContr.text);
+                    if (userList.isNotEmpty) {
+                      final user =
+                          userList.first; // Ambil user pertama dari hasil query
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomePage()));
+                          builder: (context) => HomePage(user: user),
+                        ),
+                      );
+                    } else {
+                      if (kDebugMode) {
+                        print("Username atau password salah");
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Username atau password salah!')),
+                      );
+                    }
                   },
                   style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.black54)),
@@ -196,6 +217,9 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _konfriPass;
 
   final _formKey = GlobalKey<FormState>();
+  TextEditingController usernameControler = TextEditingController();
+  TextEditingController emailControler = TextEditingController();
+  TextEditingController passwordControler = TextEditingController();
 
   void UpdateUsername(String username) {
     setState(() {
@@ -223,6 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final value = context.watch<UserDatabase>();
     return Scaffold(
         body: Center(
       child: Form(
@@ -249,6 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 280,
                   height: 40,
                   child: TextFormField(
+                    controller: usernameControler,
                     onSaved: (numString) => UpdateUsername,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -268,6 +294,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 280,
                   height: 40,
                   child: TextFormField(
+                    controller: emailControler,
                     onSaved: (numString) => UpdateEmail,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -288,6 +315,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 40,
                   child: TextFormField(
                     obscureText: true,
+                    controller: passwordControler,
                     onSaved: (numString) => UpdatePassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -313,7 +341,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       if (value == null || value.isEmpty) {
                         return "please input some value";
                       }
-                      if (value != _password) {
+
+                      if (value != passwordControler.text) {
                         return "Password Salah";
                       }
                       return null;
@@ -333,6 +362,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: () {
                         if (!_formKey.currentState!.validate()) return;
                         _formKey.currentState!.save();
+                        final transaction = User(
+                            username: usernameControler.text,
+                            email: emailControler.text,
+                            password: passwordControler.text);
+                        value.CreateUser(transaction);
+                        print(usernameControler.text);
+                        Navigator.pop(context);
                       },
                       style: const ButtonStyle(
                           backgroundColor:

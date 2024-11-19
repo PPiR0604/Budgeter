@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:budgeter/entities.dart' as entity;
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<void> createTables(Database connection, int version) async {
-  version = 2;
+  version = 4;
   final queries = [
-    'CREATE TABLE User(Id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)',
+    'CREATE TABLE user(Id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)',
     'CREATE TABLE transactions(tsc_name TEXT, tsc_amount INTEGER, tsc_day INTEGER, tsc_month INTEGER, tsc_year INTEGER, tsc_hour INTEGER, tsc_minute INTEGER, tsc_category TEXT)',
     'CREATE TABLE wishlists(wl_name TEXT, wl_price INTEGER, wl_estimated_purchase_date INTEGER)',
     'CREATE TABLE bills(bill_name TEXT, bill_amount INTEGER, bill_interest REAL, bill_interval INTEGER bill_due_date INTEGER)',
@@ -26,7 +25,7 @@ class UserDatabase extends ChangeNotifier {
 
   Future<List<entity.User>> Login(String username, String password) async {
     final query = connection.query(
-      'User',
+      'user',
       columns: [
         'Id',
         'username',
@@ -36,21 +35,19 @@ class UserDatabase extends ChangeNotifier {
       where: 'username = ? AND password = ?',
       whereArgs: [username, password],
     );
-
     var transactions = List<entity.User>.empty(growable: true);
-
     for (final {
           'Id': _id as int,
           'username': _name as String,
           'email': _email as String,
           'password': _password as String,
-          'tsc_category': category as String?,
         } in await query) {
       final transaction = entity.User.withId(
           id: _id, username: _name, email: _email, password: _password);
 
       transactions.add(transaction);
     }
+    print(await connection.rawQuery('SELECT * FROM user'));
 
     return transactions;
   }
@@ -274,7 +271,6 @@ class UserDatabase extends ChangeNotifier {
       'email': user.email,
       'password': user.password,
     };
-
     await connection.transaction((txn) async {
       await txn.insert('user', txnRecordMap);
     });

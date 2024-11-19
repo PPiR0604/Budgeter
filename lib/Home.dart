@@ -1,12 +1,14 @@
 import 'package:budgeter/Report.dart';
 import 'package:budgeter/Tabungan.dart';
 import 'package:budgeter/Wishlist.dart';
+import 'package:budgeter/entities.dart';
 import 'package:budgeter/settingPage.dart';
 import 'package:budgeter/Expenses.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final User user;
+  const HomePage({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,10 @@ class HomePage extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const SettingPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingPage()));
               },
               icon: const Icon(
                 Icons.settings,
@@ -40,12 +44,12 @@ class HomePage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             const Padding(padding: EdgeInsets.only(top: 30)),
-            const Row(
+            Row(
               children: [
-                Padding(padding: EdgeInsets.only(right: 15)),
+                const Padding(padding: EdgeInsets.only(right: 15)),
                 Text(
-                  "Selamat datang, User!",
-                  style: TextStyle(fontSize: 20),
+                  "Selamat datang, ${user.username}!",
+                  style: const TextStyle(fontSize: 20),
                 )
               ],
             ),
@@ -112,8 +116,10 @@ class HomePage extends StatelessWidget {
                       Text("Pengeluaran")
                     ],
                   ),
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const ExpensesPage())),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ExpensesPage())),
                 ),
               ),
               Expanded(
