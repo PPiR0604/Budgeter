@@ -29,7 +29,7 @@ class Bill {
     required this.dueDate,
     required this.interval,
   });
-  
+
   final int id;
   final String name;
   final int amount;
@@ -51,6 +51,20 @@ class Wishlist {
   final String name;
   final int price;
   final DateTime estimatedDate;
+}
+
+class User {
+  User({required this.username, required this.email, required this.password});
+  User.withId(
+      {this.id,
+      required this.username,
+      required this.email,
+      required this.password});
+
+  int? id;
+  String username;
+  String email;
+  String password;
 }
 
 /// Class yang merepresentasikan laporan keuangan bulanan

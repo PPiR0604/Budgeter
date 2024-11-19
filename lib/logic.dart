@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<void> createTables(Database connection, int version) async {
-  version = 1;
+  version = 2;
   final queries = [
+    'CREATE TABLE User(Id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)',
     'CREATE TABLE transactions(tsc_name TEXT, tsc_amount INTEGER, tsc_day INTEGER, tsc_month INTEGER, tsc_year INTEGER, tsc_hour INTEGER, tsc_minute INTEGER, tsc_category TEXT)',
     'CREATE TABLE wishlists(wl_name TEXT, wl_price INTEGER, wl_estimated_purchase_date INTEGER)',
     'CREATE TABLE bills(bill_name TEXT, bill_amount INTEGER, bill_interest REAL, bill_interval INTEGER bill_due_date INTEGER)',
@@ -22,6 +23,37 @@ class UserDatabase extends ChangeNotifier {
   final Database connection;
 
   UserDatabase(this.connection);
+
+  Future<List<entity.User>> Login(String username, String password) async {
+    final query = connection.query(
+      'User',
+      columns: [
+        'Id',
+        'username',
+        'email',
+        'password',
+      ],
+      where: 'username = ? AND password = ?',
+      whereArgs: [username, password],
+    );
+
+    var transactions = List<entity.User>.empty(growable: true);
+
+    for (final {
+          'Id': _id as int,
+          'username': _name as String,
+          'email': _email as String,
+          'password': _password as String,
+          'tsc_category': category as String?,
+        } in await query) {
+      final transaction = entity.User.withId(
+          id: _id, username: _name, email: _email, password: _password);
+
+      transactions.add(transaction);
+    }
+
+    return transactions;
+  }
 
   /// Ambil data transaksi untuk bulan dan tahun tertentu
   Future<List<entity.Transaction>> fetchTransactions(
@@ -220,6 +252,7 @@ class UserDatabase extends ChangeNotifier {
     final monthYearQueryResult = connection.query(
       'transactions',
       columns: ['tsc_month', 'tsc_year'],
+      orderBy: 'tsc_date',
       distinct: true,
     );
 
@@ -231,6 +264,22 @@ class UserDatabase extends ChangeNotifier {
     }
 
     return reports;
+  }
+
+  //menambahkan user ke database
+  Future<void> CreateUser(entity.User user) async {
+    final txnRecordMap = {
+      'Id': user.id,
+      'username': user.username,
+      'email': user.email,
+      'password': user.password,
+    };
+
+    await connection.transaction((txn) async {
+      await txn.insert('user', txnRecordMap);
+    });
+
+    notifyListeners();
   }
 
   /// Tambahkan transaksi ke database
@@ -293,7 +342,7 @@ class UserDatabase extends ChangeNotifier {
 
     notifyListeners();
   }
-  
+
   /// Hapus bill dari database
   Future<void> deleteBill(int billId) async {
     await connection.transaction((txn) async {
