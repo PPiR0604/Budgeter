@@ -1,6 +1,7 @@
 /// Class yang merepresentasikan transaksi
 class Transaction {
   Transaction({
+    this.id,
     required this.name,
     required this.amount,
     required this.date,
@@ -8,6 +9,7 @@ class Transaction {
     required this.category,
   });
 
+  final int? id;
   final String name;
   final int amount;
   final DateTime date;
@@ -20,13 +22,15 @@ enum TransactionType { income, expense }
 /// Class yang merepresentasikan pengeluaran berkala
 class Bill {
   Bill({
+    required this.id,
     required this.name,
     required this.amount,
     required this.interest,
     required this.dueDate,
     required this.interval,
   });
-
+  
+  final int id;
   final String name;
   final int amount;
   final double interest;
@@ -37,11 +41,13 @@ class Bill {
 /// Class yang merepresentasikan wishlist
 class Wishlist {
   Wishlist({
+    this.id,
     required this.name,
     required this.price,
     required this.estimatedDate,
   });
 
+  final int? id;
   final String name;
   final int price;
   final DateTime estimatedDate;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:budgeter/entities.dart' as entity;
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -27,6 +28,7 @@ class UserDatabase extends ChangeNotifier {
     final query = connection.query(
       'transactions',
       columns: [
+        'rowid',
         'tsc_name',
         'tsc_day',
         'tsc_month',
@@ -34,7 +36,7 @@ class UserDatabase extends ChangeNotifier {
         'tsc_hour',
         'tsc_minute',
         'tsc_amount',
-        'tsc_category'
+        'tsc_category',
       ],
       where: 'tsc_month = ? AND tsc_year = ?',
       whereArgs: [month, year],
@@ -43,6 +45,7 @@ class UserDatabase extends ChangeNotifier {
     var transactions = List<entity.Transaction>.empty(growable: true);
 
     for (final {
+          'rowid': id as int,
           'tsc_name': name as String,
           'tsc_day': day as int,
           'tsc_month': month as int,
@@ -58,6 +61,7 @@ class UserDatabase extends ChangeNotifier {
           : entity.TransactionType.income;
 
       final transaction = entity.Transaction(
+          id: id,
           name: name,
           date: fullDate,
           amount: amount,
@@ -75,6 +79,7 @@ class UserDatabase extends ChangeNotifier {
     final query = connection.query(
       'transactions',
       columns: [
+        'rowid',
         'tsc_name',
         'tsc_day',
         'tsc_month',
@@ -89,6 +94,7 @@ class UserDatabase extends ChangeNotifier {
     var transactions = List<entity.Transaction>.empty(growable: true);
 
     for (final {
+          'rowid': id as int,
           'tsc_name': name as String,
           'tsc_day': day as int,
           'tsc_month': month as int,
@@ -104,6 +110,7 @@ class UserDatabase extends ChangeNotifier {
           : entity.TransactionType.income;
 
       final transaction = entity.Transaction(
+          id: id,
           name: name,
           date: fullDate,
           amount: amount,
@@ -114,6 +121,40 @@ class UserDatabase extends ChangeNotifier {
     }
 
     return transactions;
+  }
+
+  /// Ambil wishlist dari database
+  Future<List<entity.Wishlist>> fetchWishlist() async {
+    final query = connection.query('wishlist', columns: [
+      'rowid',
+      'wl_name',
+      'wl_price',
+      'wl_estimated_purchase_date',
+    ]);
+
+    var wishlists = List<entity.Wishlist>.empty(growable: true);
+    for (final {
+          'rowid': id as int,
+          'wl_name': name as String,
+          'wl_price': price as int,
+          'wl_estimated_purchase_date': rawEstimatedPurchaseDate as int,
+        } in await query) {
+      final estimatedPurchaseDate =
+          DateTime.fromMillisecondsSinceEpoch(rawEstimatedPurchaseDate);
+      wishlists.add(entity.Wishlist(
+        name: name,
+        price: price,
+        estimatedDate: estimatedPurchaseDate,
+      ));
+    }
+
+    return wishlists;
+  }
+
+  /// Ambil bill dari database
+  Future<List<entity.Bill>> fetchBill() {
+    // TODO: implement
+    throw UnimplementedError();
   }
 
   /// Ambil laporan keuangan untuk bulan tertentu
