@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:budgeter/entities.dart' as entity;
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -153,9 +154,36 @@ class UserDatabase extends ChangeNotifier {
   }
 
   /// Ambil bill dari database
-  Future<List<entity.Bill>> fetchBill() {
-    // TODO: implement
-    throw UnimplementedError();
+  Future<List<entity.Bill>> fetchBill() async {
+    final query = connection.query('bills', columns: [
+      'roid',
+      'bill_name',
+      'bill_amount',
+      'bill_interest',
+      'bill_due_date',
+      'bill_interval',
+    ]);
+
+    var bills = List<entity.Bill>.empty(growable: true);
+    for (final {
+          'roid': id as int,
+          'bill_name': name as String,
+          'bill_amount': amount as int,
+          'bill_interest': interest as double,
+          'bill_due_date': dueDate as DateTime,
+          'bill_interval': interval as int,
+        } in await query) {
+      bills.add(entity.Bill(
+        id: id,
+        name: name,
+        amount: amount,
+        interest: interest,
+        dueDate: dueDate,
+        interval: interval,
+      ));
+    }
+
+    return bills;
   }
 
   /// Ambil laporan keuangan untuk bulan tertentu
@@ -205,7 +233,7 @@ class UserDatabase extends ChangeNotifier {
     return reports;
   }
 
-  // Tambahkan transaksi ke database
+  /// Tambahkan transaksi ke database
   Future<void> pushTransaction(entity.Transaction transaction) async {
     final txnRecordMap = {
       'tsc_name': transaction.name,
@@ -219,7 +247,57 @@ class UserDatabase extends ChangeNotifier {
     };
 
     await connection.transaction((txn) async {
-      txn.insert('transactions', txnRecordMap);
+      await txn.insert('transactions', txnRecordMap);
+    });
+
+    notifyListeners();
+  }
+
+  /// Tambahkan wishlist ke database
+  Future<void> pushWishlist(entity.Wishlist wishlist) async {
+    final wlRecordMap = {
+      'wl_name': wishlist.name,
+      'wl_price': wishlist.price,
+      'wl_estimated_puchase_date': wishlist.estimatedDate,
+    };
+
+    await connection.transaction((txn) async {
+      await txn.insert('wishlists', wlRecordMap);
+    });
+
+    notifyListeners();
+  }
+
+  /// Tambahkan bill ke database
+  Future<void> pushBill(entity.Bill bill) async {
+    final billRecordMap = {
+      'bill_name': bill.name,
+      'bill_amount': bill.name,
+      'bill_interest': bill.interest,
+      'bill_due_date': bill.dueDate,
+      'bill_interval': bill.dueDate,
+    };
+
+    await connection.transaction((txn) async {
+      await txn.insert('bills', billRecordMap);
+    });
+
+    notifyListeners();
+  }
+
+  /// Hapus wishlist dari database
+  Future<void> deleteWishlist(int wlId) async {
+    await connection.transaction((txn) async {
+      await txn.delete('wishlists', where: 'rowid = ?', whereArgs: [wlId]);
+    });
+
+    notifyListeners();
+  }
+  
+  /// Hapus bill dari database
+  Future<void> deleteBill(int billId) async {
+    await connection.transaction((txn) async {
+      await txn.delete('bills', where: 'rowid = ?', whereArgs: [billId]);
     });
 
     notifyListeners();
