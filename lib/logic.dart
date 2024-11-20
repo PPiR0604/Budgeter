@@ -104,6 +104,27 @@ class UserDatabase extends ChangeNotifier {
     return transactions;
   }
 
+  Future<int> getsummary(int flag) async {
+    int tes = 0;
+    String logic = "";
+    if (flag == 1) {
+      logic = "AND tsc_amount>0";
+    } else if (flag == 2) {
+      logic = "AND tsc_amount<0";
+    }
+    DateTime now = DateTime.now();
+    List<Map> temp = await connection.rawQuery(
+        "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic AND tsc_day>=${now.day - 7} AND tsc_month = ${now.month}");
+
+    if (temp[0]["HASIL"] == null) {
+      print("Sum NULL");
+    } else {
+      tes = temp[0]["HASIL"];
+    }
+
+    return tes;
+  }
+
   /// Ambil semua data transaksi dari database
   Future<List<entity.Transaction>> fetchAllTransactions() async {
     final query = connection.query(

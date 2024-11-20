@@ -3,13 +3,19 @@ import 'package:budgeter/Report.dart';
 import 'package:budgeter/Tabungan.dart';
 import 'package:budgeter/WishlistPage.dart';
 import 'package:budgeter/entities.dart';
+import 'package:budgeter/logic.dart';
 import 'package:budgeter/settingPage.dart';
 import 'package:budgeter/Expenses.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
+  HomePage({required this.user, Key? key}) : super(key: key);
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
   final User user;
-  const HomePage({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +68,7 @@ class HomePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.black12,
               ),
-              child: summary_(),
+              child: summary_(context),
             ),
             const Padding(padding: EdgeInsets.only(top: 20)),
             const Row(
@@ -206,7 +212,9 @@ class HomePage extends StatelessWidget {
         ]));
   }
 
-  Column summary_() {
+  Column summary_(BuildContext context) {
+    final value = context.watch<UserDatabase>();
+
     return Column(
       children: [
         const Padding(padding: EdgeInsets.only(bottom: 10)),
@@ -226,14 +234,27 @@ class HomePage extends StatelessWidget {
               decoration: const BoxDecoration(
                   border:
                       Border(right: BorderSide(color: Colors.black, width: 2))),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Income"),
-                  Text(
-                    "Rp100.000",
-                    style: TextStyle(fontSize: 17),
-                  ),
+                  const Text("Income"),
+                  FutureBuilder<int>(
+                      future: value.getsummary(1),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator(); // Loading indicator
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Tampilkan error
+                        } else if (snapshot.hasData) {
+                          return Text(
+                              "${currencyFormatter.format(snapshot.data)}"); // Tampilkan data
+                        } else {
+                          return const Text(
+                              'No data found'); // Jika data kosong
+                        }
+                      })
                 ],
               ),
             ),
@@ -243,26 +264,48 @@ class HomePage extends StatelessWidget {
             decoration: const BoxDecoration(
                 border:
                     Border(right: BorderSide(color: Colors.black, width: 2))),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Outcome"),
-                Text(
-                  "Ro50.000",
-                  style: TextStyle(fontSize: 17),
-                ),
+                FutureBuilder<int>(
+                    future: value.getsummary(2),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Loading indicator
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Tampilkan error
+                      } else if (snapshot.hasData) {
+                        return Text(
+                            "${currencyFormatter.format(snapshot.data)}"); // Tampilkan data
+                      } else {
+                        return const Text('No data found'); // Jika data kosong
+                      }
+                    })
               ],
             ),
           )),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Balance"),
-                Text(
-                  "Rp50.000",
-                  style: TextStyle(fontSize: 17),
-                ),
+                FutureBuilder<int>(
+                    future: value.getsummary(0),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Loading indicator
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Tampilkan error
+                      } else if (snapshot.hasData) {
+                        return Text(
+                            "${currencyFormatter.format(snapshot.data)}"); // Tampilkan data
+                      } else {
+                        return const Text('No data found'); // Jika data kosong
+                      }
+                    })
               ],
             ),
           )
