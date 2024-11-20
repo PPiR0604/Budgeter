@@ -7,10 +7,10 @@ Future<void> createTables(Database connection, int version) async {
   version = 5;
   final queries = [
     'CREATE TABLE user(Id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)',
-    'CREATE TABLE transactions(tsc_name TEXT, tsc_amount INTEGER, tsc_day INTEGER, tsc_month INTEGER, tsc_year INTEGER, tsc_hour INTEGER, tsc_minute INTEGER, tsc_category TEXT)',
-    'CREATE TABLE wishlists(wl_Id INTEGER PRIMARY KEY AUTOINCREMENT, wl_name TEXT, wl_price INTEGER, wl_estimated_purchase_date INTEGER)',
-    'CREATE TABLE bills(bill_name TEXT, bill_amount INTEGER, bill_interest REAL, bill_interval INTEGER bill_due_date INTEGER)',
-    'CREATE TABLE report(rpt_month INTEGER, rpt_year INTEGER, rpt_total_income INTEGER, rpt_total_expense INTEGER, rpt_balance INTEGER)',
+    'CREATE TABLE transactions(tsc_name TEXT, tsc_amount INTEGER, tsc_day INTEGER, tsc_month INTEGER, tsc_year INTEGER, tsc_hour INTEGER, tsc_minute INTEGER, tsc_category TEXT, user_Id, INTEGER, FOREIGN KEY (user_Id) REFERENCES user(Id))',
+    'CREATE TABLE wishlists(wl_Id INTEGER PRIMARY KEY AUTOINCREMENT, wl_name TEXT, wl_price INTEGER, wl_estimated_purchase_date INTEGER, user_Id, INTEGER, FOREIGN KEY (User_id) REFERENCES user(Id))',
+    'CREATE TABLE bills(bill_name TEXT, bill_amount INTEGER, bill_interest REAL, bill_interval INTEGER bill_due_date INTEGER, user_Id, INTEGER, FOREIGN KEY (User_id) REFERENCES user(Id))',
+    'CREATE TABLE report(rpt_month INTEGER, rpt_year INTEGER, rpt_total_income INTEGER, rpt_total_expense INTEGER, rpt_balance INTEGER, user_Id, INTEGER, FOREIGN KEY (User_id) REFERENCES user(Id))',
   ];
 
   for (var query in queries) {
