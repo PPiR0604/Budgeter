@@ -1,49 +1,80 @@
 import 'package:budgeter/Entitas/Pemasukan.dart';
+import 'package:budgeter/entities.dart';
+import 'package:budgeter/logic.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'settingPage.dart';
 
-class ReportPage extends StatelessWidget {
+class ReportPage extends StatefulWidget {
   ReportPage({super.key});
-  PemasukanData pemasukanEntity = PemasukanData("", 123, "", "");
 
+  @override
+  State<ReportPage> createState() => _ReportPageState();
+}
+
+class _ReportPageState extends State<ReportPage> {
   List<PemasukanData> pemasukan = [];
 
   double TotalPemasukan = 0;
-  String _TotalPemasukan = "";
 
-  void getPemasukan() {
-    PemasukanData tes = PemasukanData("", 0, "", "");
-    pemasukan = tes.getData();
+  String? selectedItem;
+  String? selectedCategoryIn;
+  String? selectedCategoryOut;
+  int? selectedIndexIn;
+  int? selectedIndexout;
+
+  void UpdateDropdown(String newValue) {
+    setState(() {
+      selectedItem = newValue;
+    });
   }
 
-  void getTotalPemasukan() {
-    PemasukanData tes = PemasukanData("", 0, "", "");
-    TotalPemasukan = tes.countPemasukan(pemasukan);
-    _TotalPemasukan = TotalPemasukan.toStringAsFixed(0);
+  void UpdateCategoryIn(String newValue) {
+    setState(() {
+      selectedCategoryIn = newValue;
+    });
   }
 
+  void UpdateIndexOut(int newValue) {
+    setState(() {
+      selectedIndexout = newValue;
+    });
+  }
+
+  void UpdateIndexIn(int newValue) {
+    setState(() {
+      selectedIndexIn = newValue;
+    });
+  }
+
+  void UpdateCategoryOut(String newValue) {
+    setState(() {
+      selectedCategoryOut = newValue;
+    });
+  }
+
+  final List incategory = [
+    'All',
+    'Gaji',
+    'Uang Saku',
+    'Warisan',
+    'Profit',
+    'Bonus'
+  ];
+
+  final List Outcategory = [
+    'All',
+    'Kebutuhan pokok',
+    'Makanan',
+    'Alat tulis',
+    'Kebutuhan kuliah',
+    'Uang kas',
+    'Barang'
+  ];
   @override
   Widget build(BuildContext context) {
-    getPemasukan();
-    getTotalPemasukan();
-
-    final List incategory = [
-      "All",
-      "Gaji",
-      "Bonus",
-      "Warisan",
-      "Jualan",
-      "Investasi"
-    ];
-
-    final List Outcategory = [
-      "All",
-      "Transportasi",
-      "Kebutuhan",
-      "Pendidikan",
-      "Hiburan",
-      "Makanan"
-    ];
+    final value = context.watch<UserDatabase>();
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -101,26 +132,58 @@ class ReportPage extends StatelessWidget {
                       style: TextStyle(fontSize: 25),
                     )),
                 Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_month,
-                        color: Colors.black45,
-                      ),
-                      Padding(padding: EdgeInsets.only(right: 5)),
-                      Text("November 2024"),
-                    ],
-                  ),
-                ),
+                    margin: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: FutureBuilder<List<String>>(
+                      future: value.getTime(), // Memanggil metode getTime()
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.done) {
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else if (snapshot.hasData) {
+                            List<String> items = snapshot.data!;
+
+                            return StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return DropdownButton<String>(
+                                  value: selectedItem, // Nilai saat ini
+                                  hint: Text(selectedItem ??
+                                      'Pilih waktu'), // Teks placeholder
+                                  items: items.map((String item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(item),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    UpdateDropdown(newValue!);
+                                  },
+                                );
+                              },
+                            );
+                          } else {
+                            // Tampilkan pesan jika data kosong
+                            return const Center(child: Text('Tidak ada data.'));
+                          }
+                        } else {
+                          // Tampilkan widget default jika kondisi lain
+                          return const Center(child: Text('Loading...'));
+                        }
+                      },
+                    )),
               ],
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
-            summaryReport(context),
+            validateSummary(),
             const Padding(padding: EdgeInsets.only(top: 20)),
             const Row(
               children: [
@@ -199,14 +262,20 @@ class ReportPage extends StatelessWidget {
         height: 25,
         child: ListView(
             scrollDirection: Axis.horizontal,
-            children: category.map((text) {
-              return Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.only(right: 10, left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(width: 1)),
-                child: Text("$text"),
+            children: category.asMap().entries.map((text) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      backgroundColor: selectedIndexout == text.key
+                          ? const Color.fromARGB(169, 243, 163, 33)
+                          : Colors.white),
+                  onPressed: () {
+                    UpdateIndexOut(text.key);
+                    UpdateCategoryOut(category[text.key]);
+                  },
+                  child: Text("${text.value}"),
+                ),
               );
             }).toList()),
       ),
@@ -222,18 +291,87 @@ class ReportPage extends StatelessWidget {
         height: 25,
         child: ListView(
             scrollDirection: Axis.horizontal,
-            children: category.map((text) {
-              return Container(
-                margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.only(right: 10, left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(width: 1)),
-                child: Text("$text"),
+            children: category.asMap().entries.map((text) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      backgroundColor: selectedIndexIn == text.key
+                          ? const Color.fromARGB(169, 243, 163, 33)
+                          : Colors.white),
+                  onPressed: () {
+                    UpdateIndexIn(text.key);
+                    UpdateCategoryIn(category[selectedIndexIn as int]);
+                  },
+                  child: Text("${text.value}"),
+                ),
               );
             }).toList()),
       ),
     );
+  }
+
+  Container validateSummary() {
+    if (selectedItem != null) {
+      List? temp = selectedItem?.split(" ");
+      return Container(
+        child: SummaryReportDetail(
+          context: context,
+          month: int.tryParse(temp?[0]),
+          year: int.tryParse(temp?[1]),
+        ),
+      );
+    }
+
+    return Container(
+      child: SummaryReportDetail(
+        context: context,
+        month: 0,
+        year: 0,
+      ),
+    );
+  }
+
+  Container validateExp(double size) {
+    String? flag = "";
+    if (selectedItem != null) {
+      List? temp = selectedItem?.split(" ");
+      if (selectedCategoryOut != null) {
+        flag = selectedCategoryOut;
+      }
+      if (selectedCategoryOut == "All") {
+        flag = "";
+      }
+      return Container(
+        child: OutcomeTabelReport(
+            size: size,
+            month: int.tryParse(temp?[0]),
+            year: int.tryParse(temp?[1]),
+            forinput: flag!),
+      );
+    }
+    return Container();
+  }
+
+  Container validateIn(double size) {
+    String? flag = "";
+    if (selectedItem != null) {
+      List? temp = selectedItem?.split(" ");
+      if (selectedCategoryIn != null) {
+        flag = selectedCategoryIn;
+      }
+      if (selectedCategoryIn == "All") {
+        flag = "";
+      }
+      return Container(
+        child: IncomeTableReport(
+            size: size,
+            month: int.tryParse(temp?[0]),
+            year: int.tryParse(temp?[1]),
+            forinput: flag!),
+      );
+    }
+    return Container();
   }
 
   Container outcomeTable(double size) {
@@ -243,49 +381,7 @@ class ReportPage extends StatelessWidget {
       height: 400,
       decoration: BoxDecoration(
           color: Colors.black12, borderRadius: BorderRadius.circular(10)),
-      child: ListView(
-        children: pemasukan.map((data) {
-          return Card(
-            margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-            color: const Color.fromRGBO(255, 248, 244, 1),
-            child: Row(
-              children: [
-                const Padding(padding: EdgeInsets.only(left: 15, top: 60)),
-                SizedBox(
-                    width: size * 0.2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data.tanggal,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                        Text(
-                          data.category,
-                          style: const TextStyle(fontSize: 13),
-                        )
-                      ],
-                    )),
-                SizedBox(
-                    width: size * 0.4,
-                    child: Text(
-                      data.nama,
-                      softWrap: true,
-                      style: const TextStyle(fontSize: 13),
-                    )),
-                const Icon(
-                  Icons.arrow_downward_rounded,
-                  color: Colors.red,
-                ),
-                Text(
-                  'Rp${data.amount}',
-                  style: const TextStyle(fontSize: 13),
-                )
-              ],
-            ),
-          );
-        }).toList(),
-      ),
+      child: ListView(children: [validateExp(size)]),
     );
   }
 
@@ -297,52 +393,28 @@ class ReportPage extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.black12, borderRadius: BorderRadius.circular(10)),
       child: ListView(
-        children: pemasukan.map((data) {
-          return Card(
-            margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-            color: const Color.fromRGBO(255, 248, 244, 1),
-            child: Row(
-              children: [
-                const Padding(padding: EdgeInsets.only(left: 15, top: 60)),
-                SizedBox(
-                    width: size * 0.2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data.tanggal,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                        Text(
-                          data.category,
-                          style: const TextStyle(fontSize: 13),
-                        )
-                      ],
-                    )),
-                SizedBox(
-                    width: size * 0.4,
-                    child: Text(
-                      data.nama,
-                      softWrap: true,
-                      style: const TextStyle(fontSize: 13),
-                    )),
-                const Icon(
-                  Icons.arrow_upward_rounded,
-                  color: Colors.green,
-                ),
-                Text(
-                  'Rp${data.amount}',
-                  style: const TextStyle(fontSize: 13),
-                )
-              ],
-            ),
-          );
-        }).toList(),
+        children: [validateIn(size)],
       ),
     );
   }
+}
 
-  Container summaryReport(BuildContext context) {
+class SummaryReportDetail extends StatelessWidget {
+  SummaryReportDetail(
+      {super.key,
+      required this.context,
+      required this.month,
+      required this.year});
+
+  int? month;
+  int? year;
+  final BuildContext context;
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
+
+  @override
+  Widget build(BuildContext context) {
+    final value = context.read<UserDatabase>();
     return Container(
       margin: const EdgeInsets.only(
         right: 10,
@@ -373,12 +445,30 @@ class ReportPage extends StatelessWidget {
                     "Pemasukan",
                     style: TextStyle(fontSize: 20),
                   ),
-                  Text("Rp$_TotalPemasukan")
+                  FutureBuilder<int>(
+                      future: value.getSummaryReport(1, month!, year!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator(); // Loading indicator
+                        } else if (snapshot.hasError) {
+                          return Text(
+                              'Error: ${snapshot.error}'); // Tampilkan error
+                        } else if (snapshot.hasData) {
+                          return Text(
+                            "${currencyFormatter.format(snapshot.data)}",
+                            textAlign: TextAlign.center,
+                          ); // Tampilkan data
+                        } else {
+                          return const Text(
+                              'No data found'); // Jika data kosong
+                        }
+                      })
                 ],
               ),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -391,12 +481,187 @@ class ReportPage extends StatelessWidget {
                   "Pengeluaran",
                   style: TextStyle(fontSize: 20),
                 ),
-                Text("Rp 1.000.000")
+                FutureBuilder<int>(
+                    future: value.getSummaryReport(2, month!, year!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Loading indicator
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Tampilkan error
+                      } else if (snapshot.hasData) {
+                        return Text(
+                          "${currencyFormatter.format(snapshot.data)}",
+                          textAlign: TextAlign.center,
+                        ); // Tampilkan data
+                      } else {
+                        return const Text('No data found'); // Jika data kosong
+                      }
+                    })
               ],
             ),
           )
         ],
       ),
+    );
+  }
+}
+
+class OutcomeTabelReport extends StatelessWidget {
+  OutcomeTabelReport(
+      {super.key,
+      required this.size,
+      required this.month,
+      required this.year,
+      required this.forinput});
+
+  DateFormat formatter = DateFormat("dd-MM-yyyy");
+  String forinput;
+  String category = "";
+  int? month;
+  int? year;
+  double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final database = context.read<UserDatabase>();
+    return FutureBuilder(
+      future: database.fetchTransactions(month!, year!, forinput),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return Column(
+            children: snapshot.data!.map((txn) {
+              if (txn.type == TransactionType.income) {
+                return const SizedBox();
+              }
+              if (txn.category != null) {
+                category = txn.category.toString();
+              }
+              return Card(
+                margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                color: const Color.fromRGBO(255, 248, 244, 1),
+                child: Row(
+                  children: [
+                    const Padding(padding: EdgeInsets.only(left: 15, top: 60)),
+                    SizedBox(
+                        width: size * 0.2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              formatter.format(txn.date),
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                            Text(
+                              category,
+                              style: const TextStyle(fontSize: 13),
+                            )
+                          ],
+                        )),
+                    SizedBox(
+                        width: size * 0.35,
+                        child: Text(
+                          txn.name,
+                          softWrap: true,
+                          style: const TextStyle(fontSize: 13),
+                        )),
+                    const Icon(
+                      Icons.arrow_downward_rounded,
+                      color: Colors.red,
+                    ),
+                    Text(
+                      'Rp${txn.amount}',
+                      style: const TextStyle(fontSize: 13),
+                    )
+                  ],
+                ),
+              );
+            }).toList(),
+          );
+        } else {
+          return Center(child: Text("Wishlist Kosong"));
+        }
+      },
+    );
+  }
+}
+
+class IncomeTableReport extends StatelessWidget {
+  IncomeTableReport(
+      {super.key,
+      required this.size,
+      required this.month,
+      required this.year,
+      required this.forinput});
+
+  DateFormat formatter = DateFormat("dd-MM-yyyy");
+  String forinput;
+  String category = "";
+  int? month;
+  int? year;
+  double size;
+  @override
+  Widget build(BuildContext context) {
+    final database = context.read<UserDatabase>();
+    return FutureBuilder(
+      future: database.fetchTransactions(month!, year!, forinput),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          return Column(
+            children: snapshot.data!.map((txn) {
+              if (txn.type == TransactionType.expense) {
+                return const SizedBox();
+              }
+              if (txn.category != null) {
+                category = txn.category.toString();
+              }
+              return Card(
+                margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                color: const Color.fromRGBO(255, 248, 244, 1),
+                child: Row(
+                  children: [
+                    const Padding(padding: EdgeInsets.only(left: 15, top: 60)),
+                    SizedBox(
+                        width: size * 0.2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              formatter.format(txn.date),
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                            Text(
+                              category,
+                              style: const TextStyle(fontSize: 13),
+                            )
+                          ],
+                        )),
+                    SizedBox(
+                        width: size * 0.35,
+                        child: Text(
+                          txn.name,
+                          softWrap: true,
+                          style: const TextStyle(fontSize: 13),
+                        )),
+                    const Icon(
+                      Icons.arrow_upward_rounded,
+                      color: Colors.green,
+                    ),
+                    Text(
+                      'Rp${txn.amount}',
+                      style: const TextStyle(fontSize: 13),
+                    )
+                  ],
+                ),
+              );
+            }).toList(),
+          );
+        } else {
+          return Center(child: Text("Wishlist Kosong"));
+        }
+      },
     );
   }
 }

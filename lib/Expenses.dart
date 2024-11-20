@@ -282,7 +282,7 @@ class _CategorySelectorState extends State<CategorySelector> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Pilih kategori',
+          'Pilih Kategori',
           textAlign: TextAlign.left,
           style: theme.textTheme.labelLarge,
         ),
@@ -336,7 +336,7 @@ class TransactionList extends StatelessWidget {
     final value = context.watch<UserDatabase>();
 
     return FutureBuilder(
-      future: value.fetchTransactions(currDate.month, currDate.year),
+      future: value.fetchTransactions(currDate.month, currDate.year, ""),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(

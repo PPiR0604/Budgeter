@@ -333,7 +333,7 @@ class TransactionList extends StatelessWidget {
     final value = context.watch<UserDatabase>();
 
     return FutureBuilder(
-      future: value.fetchTransactions(currDate.month, currDate.year),
+      future: value.fetchTransactions(currDate.month, currDate.year, ""),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(

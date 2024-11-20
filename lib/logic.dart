@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:budgeter/entities.dart' as entity;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<void> createTables(Database connection, int version) async {
@@ -54,23 +55,44 @@ class UserDatabase extends ChangeNotifier {
 
   /// Ambil data transaksi untuk bulan dan tahun tertentu
   Future<List<entity.Transaction>> fetchTransactions(
-      int month, int year) async {
-    final query = connection.query(
-      'transactions',
-      columns: [
-        'rowid',
-        'tsc_name',
-        'tsc_day',
-        'tsc_month',
-        'tsc_year',
-        'tsc_hour',
-        'tsc_minute',
-        'tsc_amount',
-        'tsc_category',
-      ],
-      where: 'tsc_month = ? AND tsc_year = ? AND user_Id = ?',
-      whereArgs: [month, year, activeUser.id],
-    );
+      int month, int year, String? category) async {
+    final query;
+    if (category != "") {
+      query = connection.query(
+        'transactions',
+        columns: [
+          'rowid',
+          'tsc_name',
+          'tsc_day',
+          'tsc_month',
+          'tsc_year',
+          'tsc_hour',
+          'tsc_minute',
+          'tsc_amount',
+          'tsc_category',
+        ],
+        where:
+            'tsc_month = ? AND tsc_year = ? AND user_Id = ? AND tsc_category = ?',
+        whereArgs: [month, year, activeUser.id, category],
+      );
+    } else {
+      query = connection.query(
+        'transactions',
+        columns: [
+          'rowid',
+          'tsc_name',
+          'tsc_day',
+          'tsc_month',
+          'tsc_year',
+          'tsc_hour',
+          'tsc_minute',
+          'tsc_amount',
+          'tsc_category',
+        ],
+        where: 'tsc_month = ? AND tsc_year = ? AND user_Id = ?',
+        whereArgs: [month, year, activeUser.id],
+      );
+    }
 
     var transactions = List<entity.Transaction>.empty(growable: true);
 
@@ -104,6 +126,23 @@ class UserDatabase extends ChangeNotifier {
     return transactions;
   }
 
+  //Ambil semua bulan dan tahun
+  Future<List<String>> getTime() async {
+    var list = List<String>.empty(growable: true);
+
+    final query = await connection
+        .rawQuery("SELECT DISTINCT tsc_month, tsc_year FROM transactions");
+
+    for (var row in query) {
+      String formattedTime =
+          '${row['tsc_month']} ${row['tsc_year'].toString()}';
+      list.add(formattedTime);
+    }
+
+    return list;
+  }
+
+  //ambil balance, income, dan expense untuk seminggu ini
   Future<int> getsummary(int flag) async {
     int tes = 0;
     String logic = "";
@@ -118,6 +157,26 @@ class UserDatabase extends ChangeNotifier {
 
     if (temp[0]["HASIL"] == null) {
       print("Sum NULL");
+    } else {
+      tes = temp[0]["HASIL"];
+    }
+
+    return tes;
+  }
+
+  //ambil balance, income, dan expense untuk seminggu ini
+  Future<int> getSummaryReport(int flag, int month, int year) async {
+    int tes = 0;
+    String logic = "";
+    if (flag == 1) {
+      logic = "AND tsc_amount>0";
+    } else if (flag == 2) {
+      logic = "AND tsc_amount<0";
+    }
+    List<Map> temp = await connection.rawQuery(
+        "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic AND tsc_year = ${year} AND tsc_month = ${month}");
+
+    if (temp[0]["HASIL"] == null) {
     } else {
       tes = temp[0]["HASIL"];
     }
@@ -253,7 +312,7 @@ class UserDatabase extends ChangeNotifier {
     final fullDate = DateTime.parse('$year${month}1');
     var totalIncome = 0;
     var totalExpense = 0;
-    final transactions = await fetchTransactions(month, year);
+    final transactions = await fetchTransactions(month, year, "");
 
     // jumlahkan pemasukan dan pengeluaran
     for (var transaction in transactions) {

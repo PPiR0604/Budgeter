@@ -249,7 +249,9 @@ class HomePage extends StatelessWidget {
                               'Error: ${snapshot.error}'); // Tampilkan error
                         } else if (snapshot.hasData) {
                           return Text(
-                              "${currencyFormatter.format(snapshot.data)}"); // Tampilkan data
+                            "${currencyFormatter.format(snapshot.data)}",
+                            textAlign: TextAlign.center,
+                          ); // Tampilkan data
                         } else {
                           return const Text(
                               'No data found'); // Jika data kosong
@@ -278,7 +280,9 @@ class HomePage extends StatelessWidget {
                             'Error: ${snapshot.error}'); // Tampilkan error
                       } else if (snapshot.hasData) {
                         return Text(
-                            "${currencyFormatter.format(snapshot.data)}"); // Tampilkan data
+                          "${currencyFormatter.format(snapshot.data)}",
+                          textAlign: TextAlign.center,
+                        ); // Tampilkan data
                       } else {
                         return const Text('No data found'); // Jika data kosong
                       }
@@ -301,7 +305,9 @@ class HomePage extends StatelessWidget {
                             'Error: ${snapshot.error}'); // Tampilkan error
                       } else if (snapshot.hasData) {
                         return Text(
-                            "${currencyFormatter.format(snapshot.data)}"); // Tampilkan data
+                          "${currencyFormatter.format(snapshot.data)}",
+                          textAlign: TextAlign.center,
+                        ); // Tampilkan data
                       } else {
                         return const Text('No data found'); // Jika data kosong
                       }
