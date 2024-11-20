@@ -240,7 +240,8 @@ class _CategorySelectorState extends State<CategorySelector> {
     'Makanan',
     'Alat tulis',
     'Kebutuhan kuliah',
-    'Uang kas'
+    'Uang kas',
+    'Barang'
   ];
   int? selectedIndex;
 

@@ -4,10 +4,13 @@ import 'package:budgeter/entities.dart';
 import 'package:budgeter/logic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'settingPage.dart';
 
 class WishlistPage extends StatefulWidget {
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
   WishlistPage({super.key});
 
   @override
@@ -97,13 +100,15 @@ class _WishlistPageState extends State<WishlistPage> {
               ],
             ),
             Container(
-                padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+                padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
                 height: 400,
                 width: size * 0.95,
                 decoration: BoxDecoration(
                     color: Colors.black12,
                     borderRadius: BorderRadius.circular(10)),
-                child: SizedBox(height: 400, child: Wish_List(size: size))),
+                child: SizedBox(
+                    height: 400,
+                    child: ListView(children: [Wish_List(size: size)]))),
             const Padding(padding: EdgeInsets.only(top: 20)),
             const Row(
               children: [
@@ -173,7 +178,9 @@ class _WishlistPageState extends State<WishlistPage> {
                                 estimatedDate: DateTime.now());
 
                             database.pushWishlist(wishlist);
-                            SnackBar(content: const Text("Input Berhasil"));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Input Berhasil')),
+                            );
                             clearInput();
                           },
                         ),
@@ -222,7 +229,8 @@ class Wish_List extends StatelessWidget {
 
 class WishlistTable extends StatelessWidget {
   WishlistTable({super.key, required this.wishlist, required this.size});
-
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
   final Wishlist wishlist;
   final double size;
 
@@ -230,27 +238,36 @@ class WishlistTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         color: const Color.fromRGBO(255, 248, 244, 1),
-        margin: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
         child: Row(
+
             // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               const Padding(padding: EdgeInsets.only(left: 10, top: 60)),
               SizedBox(
-                width: size * 0.26,
+                width: size * 0.32,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(wishlist.name),
-                    Text('Rp${wishlist.price}'),
+                    Text(currencyFormatter.format(wishlist.price)),
                   ],
                 ),
               ),
               SizedBox(
-                  width: size * 0.38,
+                  width: size * 0.33,
                   child: const Text(
                     "Analysis",
                     softWrap: true,
+                  )),
+              ElevatedButton(
+                  onPressed: () {
+                    final database = context.read<UserDatabase>();
+                    database.deleteWishlist(wishlist.id!);
+                  },
+                  child: Text(
+                    "Selesai",
+                    style: TextStyle(fontSize: 10),
                   ))
             ]));
   }

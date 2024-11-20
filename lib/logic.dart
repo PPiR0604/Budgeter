@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<void> createTables(Database connection, int version) async {
-  version = 4;
+  version = 5;
   final queries = [
     'CREATE TABLE user(Id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)',
     'CREATE TABLE transactions(tsc_name TEXT, tsc_amount INTEGER, tsc_day INTEGER, tsc_month INTEGER, tsc_year INTEGER, tsc_hour INTEGER, tsc_minute INTEGER, tsc_category TEXT)',
-    'CREATE TABLE wishlists(wl_name TEXT, wl_price INTEGER, wl_estimated_purchase_date INTEGER)',
+    'CREATE TABLE wishlists(wl_Id INTEGER PRIMARY KEY AUTOINCREMENT, wl_name TEXT, wl_price INTEGER, wl_estimated_purchase_date INTEGER)',
     'CREATE TABLE bills(bill_name TEXT, bill_amount INTEGER, bill_interest REAL, bill_interval INTEGER bill_due_date INTEGER)',
     'CREATE TABLE report(rpt_month INTEGER, rpt_year INTEGER, rpt_total_income INTEGER, rpt_total_expense INTEGER, rpt_balance INTEGER)',
   ];
@@ -154,8 +154,8 @@ class UserDatabase extends ChangeNotifier {
 
   /// Ambil wishlist dari database
   Future<List<entity.Wishlist>> fetchWishlist() async {
-    final query = connection.query('wishlist', columns: [
-      'rowid',
+    final query = connection.query('wishlists', columns: [
+      'wl_Id',
       'wl_name',
       'wl_price',
       'wl_estimated_purchase_date',
@@ -163,7 +163,7 @@ class UserDatabase extends ChangeNotifier {
 
     var wishlists = List<entity.Wishlist>.empty(growable: true);
     for (final {
-          'rowid': id as int,
+          'wl_Id': id as int,
           'wl_name': name as String,
           'wl_price': price as int,
           'wl_estimated_purchase_date': rawEstimatedPurchaseDate as int,
@@ -300,11 +300,11 @@ class UserDatabase extends ChangeNotifier {
   /// Tambahkan wishlist ke database
   Future<void> pushWishlist(entity.Wishlist wishlist) async {
     final wlRecordMap = {
+      'wl_Id': wishlist.id,
       'wl_name': wishlist.name,
       'wl_price': wishlist.price,
-      'wl_estimated_puchase_date': wishlist.estimatedDate,
+      'wl_estimated_purchase_date': wishlist.estimatedDate.month,
     };
-
     await connection.transaction((txn) async {
       await txn.insert('wishlists', wlRecordMap);
     });
@@ -332,7 +332,7 @@ class UserDatabase extends ChangeNotifier {
   /// Hapus wishlist dari database
   Future<void> deleteWishlist(int wlId) async {
     await connection.transaction((txn) async {
-      await txn.delete('wishlists', where: 'rowid = ?', whereArgs: [wlId]);
+      await txn.delete('wishlists', where: 'wl_Id = ?', whereArgs: [wlId]);
     });
 
     notifyListeners();

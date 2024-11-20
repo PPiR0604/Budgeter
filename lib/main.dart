@@ -22,7 +22,7 @@ void main() async {
   final dbConnection = await openDatabase(
     join(await getDatabasesPath(), path),
     onCreate: (db, version) async => await createTables(db, version),
-    version: 4,
+    version: 5,
   );
   runApp(ChangeNotifierProvider(
       create: (context) => UserDatabase(dbConnection), child: const MyApp()));
