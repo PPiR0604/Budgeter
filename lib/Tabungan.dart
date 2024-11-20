@@ -1,12 +1,17 @@
+import 'package:budgeter/logic.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'settingPage.dart';
 
 class TabunganPage extends StatelessWidget {
   TabunganPage({super.key});
-  final int _TotalPemasukan = 800000;
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
   @override
   Widget build(BuildContext context) {
+    final value = context.watch<UserDatabase>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 129, 65),
@@ -95,10 +100,25 @@ class TabunganPage extends StatelessWidget {
                             size: 40,
                             color: Colors.green,
                           ),
-                          Text(
-                            "Rp$_TotalPemasukan",
-                            style: const TextStyle(fontSize: 18),
-                          ),
+                          FutureBuilder<int>(
+                              future: value.getSavings(0),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator(); // Loading indicator
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                      'Error: ${snapshot.error}'); // Tampilkan error
+                                } else if (snapshot.hasData) {
+                                  return Text(
+                                    "${currencyFormatter.format(snapshot.data)}",
+                                    textAlign: TextAlign.center,
+                                  ); // Tampilkan data
+                                } else {
+                                  return const Text(
+                                      'No data found'); // Jika data kosong
+                                }
+                              }),
                           const Text(
                             "Tabungan selama ini",
                             softWrap: true,
@@ -109,23 +129,38 @@ class TabunganPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.arrow_upward,
                           color: Colors.red,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.savings,
                           size: 40,
                           color: Colors.red,
                         ),
-                        Text(
-                          "Rp 1000000",
-                          style: TextStyle(fontSize: 18),
-                        ),
+                        FutureBuilder<int>(
+                            future: value.getSavings(2),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator(); // Loading indicator
+                              } else if (snapshot.hasError) {
+                                return Text(
+                                    'Error: ${snapshot.error}'); // Tampilkan error
+                              } else if (snapshot.hasData) {
+                                return Text(
+                                  "${currencyFormatter.format(snapshot.data)}",
+                                  textAlign: TextAlign.center,
+                                ); // Tampilkan data
+                              } else {
+                                return const Text(
+                                    'No data found'); // Jika data kosong
+                              }
+                            }),
                         Text(
                           "Pengeluaran selama ini",
                           softWrap: true,

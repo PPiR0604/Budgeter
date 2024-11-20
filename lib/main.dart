@@ -247,6 +247,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 70,
                   child: TextFormField(
                     controller: emailControler,
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "please input some value";

@@ -472,12 +472,12 @@ class SummaryReportDetail extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.arrow_downward,
                   size: 60,
                   color: Colors.red,
                 ),
-                Text(
+                const Text(
                   "Pengeluaran",
                   style: TextStyle(fontSize: 20),
                 ),
@@ -521,6 +521,8 @@ class OutcomeTabelReport extends StatelessWidget {
   int? month;
   int? year;
   double size;
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
 
   @override
   Widget build(BuildContext context) {
@@ -571,7 +573,7 @@ class OutcomeTabelReport extends StatelessWidget {
                       color: Colors.red,
                     ),
                     Text(
-                      'Rp${txn.amount}',
+                      currencyFormatter.format(txn.amount),
                       style: const TextStyle(fontSize: 13),
                     )
                   ],
@@ -580,7 +582,7 @@ class OutcomeTabelReport extends StatelessWidget {
             }).toList(),
           );
         } else {
-          return Center(child: Text("Wishlist Kosong"));
+          return Center(child: const Text("Data Kosong"));
         }
       },
     );
@@ -588,6 +590,8 @@ class OutcomeTabelReport extends StatelessWidget {
 }
 
 class IncomeTableReport extends StatelessWidget {
+  final currencyFormatter =
+      NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
   IncomeTableReport(
       {super.key,
       required this.size,
@@ -650,7 +654,7 @@ class IncomeTableReport extends StatelessWidget {
                       color: Colors.green,
                     ),
                     Text(
-                      'Rp${txn.amount}',
+                      currencyFormatter.format(txn.amount),
                       style: const TextStyle(fontSize: 13),
                     )
                   ],
@@ -659,7 +663,7 @@ class IncomeTableReport extends StatelessWidget {
             }).toList(),
           );
         } else {
-          return Center(child: Text("Wishlist Kosong"));
+          return Center(child: const Text("Kosong"));
         }
       },
     );

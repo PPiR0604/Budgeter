@@ -164,7 +164,7 @@ class UserDatabase extends ChangeNotifier {
     return tes;
   }
 
-  //ambil balance, income, dan expense untuk seminggu ini
+  //ambil balance, income, dan expense untuk report sebulan
   Future<int> getSummaryReport(int flag, int month, int year) async {
     int tes = 0;
     String logic = "";
@@ -175,6 +175,25 @@ class UserDatabase extends ChangeNotifier {
     }
     List<Map> temp = await connection.rawQuery(
         "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic AND tsc_year = ${year} AND tsc_month = ${month}");
+
+    if (temp[0]["HASIL"] == null) {
+    } else {
+      tes = temp[0]["HASIL"];
+    }
+
+    return tes;
+  }
+
+  Future<int> getSavings(int flag) async {
+    int tes = 0;
+    String logic = "";
+    if (flag == 1) {
+      logic = "AND tsc_amount>0";
+    } else if (flag == 2) {
+      logic = "AND tsc_amount<0";
+    }
+    List<Map> temp = await connection.rawQuery(
+        "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic ");
 
     if (temp[0]["HASIL"] == null) {
     } else {
