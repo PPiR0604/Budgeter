@@ -1,3 +1,4 @@
+import 'package:budgeter/entities.dart';
 import 'package:budgeter/logic.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,13 +6,24 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'settingPage.dart';
 
-class TabunganPage extends StatelessWidget {
+class TabunganPage extends StatefulWidget {
   TabunganPage({super.key});
+
+  @override
+  State<TabunganPage> createState() => _TabunganPageState();
+}
+
+class _TabunganPageState extends State<TabunganPage> {
+  List<Chart> income = [];
+  List<Chart> expense = [];
+
   final currencyFormatter =
       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
+
   @override
   Widget build(BuildContext context) {
     final value = context.watch<UserDatabase>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 129, 65),
@@ -161,7 +173,7 @@ class TabunganPage extends StatelessWidget {
                                     'No data found'); // Jika data kosong
                               }
                             }),
-                        Text(
+                        const Text(
                           "Pengeluaran selama ini",
                           softWrap: true,
                           textAlign: TextAlign.center,
@@ -196,20 +208,65 @@ class TabunganPage extends StatelessWidget {
                 ],
               ),
             ),
+            FutureBuilder(
+                future: value.getCharts(1),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Loading indicator
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Tampilkan error
+                  } else if (snapshot.hasData) {
+                    income = snapshot.data as List<Chart>;
+                    return Container();
+                  } else {
+                    return const Text('No data found'); // Jika data kosong
+                  }
+                }),
+            FutureBuilder(
+                future: value.getCharts(2),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator(); // Loading indicator
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}'); // Tampilkan error
+                  } else if (snapshot.hasData) {
+                    expense = snapshot.data as List<Chart>;
+                    print(expense);
+                    return SfCartesianChart(
+                      primaryXAxis: const CategoryAxis(),
+                      series: [
+                        LineSeries<Chart, String>(
+                          dataSource: income,
+                          color: Colors.green,
+                          xValueMapper: (Chart tes, _) => tes.time,
+                          yValueMapper: (Chart tes, _) => tes.amount,
+                        ),
+                        LineSeries<Chart, String>(
+                          dataSource: expense,
+                          color: Colors.red,
+                          xValueMapper: (Chart tes, _) => tes.time,
+                          yValueMapper: (Chart tes, _) => tes.amount,
+                        )
+                      ],
+                    );
+                  } else {
+                    return const Text('No data found'); // Jika data kosong
+                  }
+                }),
             SfCartesianChart(
               primaryXAxis: const CategoryAxis(),
               series: [
-                LineSeries<dummy, String>(
-                  dataSource: data,
+                LineSeries<Chart, String>(
+                  dataSource: income,
                   color: Colors.green,
-                  xValueMapper: (dummy Tesdata, _) => Tesdata.x,
-                  yValueMapper: (dummy Tesdata, _) => Tesdata.y,
+                  xValueMapper: (Chart tes, _) => tes.time,
+                  yValueMapper: (Chart tes, _) => tes.amount,
                 ),
-                LineSeries<dummy, String>(
-                  dataSource: data,
+                LineSeries<Chart, String>(
+                  dataSource: expense,
                   color: Colors.red,
-                  xValueMapper: (dummy Tesdata, _) => Tesdata.x,
-                  yValueMapper: (dummy Tesdata, _) => Tesdata.y1,
+                  xValueMapper: (Chart tes, _) => tes.time,
+                  yValueMapper: (Chart tes, _) => tes.amount,
                 )
               ],
             )
@@ -218,17 +275,4 @@ class TabunganPage extends StatelessWidget {
       ),
     );
   }
-
-  final List<dummy> data = <dummy>[
-    dummy("April", 301000, 199239),
-    dummy("Mei", 36000, 124334),
-    dummy("Juni", 123312, 112234)
-  ];
-}
-
-class dummy {
-  dummy(this.x, this.y, this.y1);
-  final String x;
-  final double y;
-  final double y1;
 }

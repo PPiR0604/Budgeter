@@ -203,6 +203,38 @@ class UserDatabase extends ChangeNotifier {
     return tes;
   }
 
+  Future<List<entity.Chart>> getCharts(int flag) async {
+    String logic = "";
+    if (flag == 1) {
+      logic = "AND tsc_amount > 0";
+    } else if (flag == 2) {
+      logic = "AND tsc_amount < 0";
+    }
+
+    // Query SQL
+    List<Map<String, dynamic>> temp = await connection.rawQuery(
+      "SELECT tsc_month, tsc_year, SUM(tsc_amount) AS total_amount "
+      "FROM transactions "
+      "WHERE user_id = ? $logic "
+      "GROUP BY tsc_month, tsc_year",
+      [activeUser.id], // Parameter untuk user_id
+    );
+
+    // Map hasil query ke dalam List<entity.Chart>
+    var charts = List<entity.Chart>.empty(growable: true);
+
+    for (final row in temp) {
+      final month = row['tsc_month'] as int;
+      final year = row['tsc_year'] as int;
+      final amount = row['total_amount'] as int;
+
+      final transaction = entity.Chart(amount: amount, time: "$month-$year");
+      charts.add(transaction);
+    }
+
+    return charts;
+  }
+
   /// Ambil semua data transaksi dari database
   Future<List<entity.Transaction>> fetchAllTransactions() async {
     final query = connection.query(

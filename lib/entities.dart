@@ -38,6 +38,13 @@ class Bill {
   final int interval;
 }
 
+class Chart {
+  Chart({required this.time, required this.amount});
+
+  final int amount;
+  final String time;
+}
+
 /// Class yang merepresentasikan wishlist
 class Wishlist {
   Wishlist({
