@@ -22,6 +22,9 @@ void main() async {
   final dbConnection = await openDatabase(
     join(await getDatabasesPath(), path),
     onCreate: (db, version) async => await createTables(db, version),
+    onConfigure: (db) {
+      db.execute('PRAGMA foreign_keys = ON');
+    },
     version: 5,
   );
   runApp(ChangeNotifierProvider(
@@ -134,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                     if (userList.isNotEmpty) {
                       final user =
                           userList.first; // Ambil user pertama dari hasil query
+                      database.activeUser = user;
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

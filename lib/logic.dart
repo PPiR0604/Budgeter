@@ -20,6 +20,7 @@ Future<void> createTables(Database connection, int version) async {
 
 class UserDatabase extends ChangeNotifier {
   final Database connection;
+  late entity.User activeUser;
 
   UserDatabase(this.connection);
 
@@ -67,8 +68,8 @@ class UserDatabase extends ChangeNotifier {
         'tsc_amount',
         'tsc_category',
       ],
-      where: 'tsc_month = ? AND tsc_year = ?',
-      whereArgs: [month, year],
+      where: 'tsc_month = ? AND tsc_year = ? AND user_Id = ?',
+      whereArgs: [month, year, activeUser.id],
     );
 
     var transactions = List<entity.Transaction>.empty(growable: true);
@@ -118,6 +119,8 @@ class UserDatabase extends ChangeNotifier {
         'tsc_amount',
         'tsc_category'
       ],
+      where: 'user_Id = ?',
+      whereArgs: [activeUser.id],
     );
 
     var transactions = List<entity.Transaction>.empty(growable: true);
@@ -154,12 +157,17 @@ class UserDatabase extends ChangeNotifier {
 
   /// Ambil wishlist dari database
   Future<List<entity.Wishlist>> fetchWishlist() async {
-    final query = connection.query('wishlists', columns: [
-      'wl_Id',
-      'wl_name',
-      'wl_price',
-      'wl_estimated_purchase_date',
-    ]);
+    final query = connection.query(
+      'wishlists',
+      columns: [
+        'wl_Id',
+        'wl_name',
+        'wl_price',
+        'wl_estimated_purchase_date',
+      ],
+      where: 'user_Id = ?',
+      whereArgs: [activeUser.id],
+    );
 
     var wishlists = List<entity.Wishlist>.empty(growable: true);
     for (final {
@@ -183,14 +191,19 @@ class UserDatabase extends ChangeNotifier {
 
   /// Ambil bill dari database
   Future<List<entity.Bill>> fetchBill() async {
-    final query = connection.query('bills', columns: [
-      'roid',
-      'bill_name',
-      'bill_amount',
-      'bill_interest',
-      'bill_due_date',
-      'bill_interval',
-    ]);
+    final query = connection.query(
+      'bills',
+      columns: [
+        'roid',
+        'bill_name',
+        'bill_amount',
+        'bill_interest',
+        'bill_due_date',
+        'bill_interval',
+      ],
+      where: 'user_Id = ?',
+      whereArgs: [activeUser.id],
+    );
 
     var bills = List<entity.Bill>.empty(growable: true);
     for (final {
@@ -249,6 +262,8 @@ class UserDatabase extends ChangeNotifier {
       'transactions',
       columns: ['tsc_month', 'tsc_year'],
       orderBy: 'tsc_date',
+      where: 'user_Id = ?',
+      whereArgs: [activeUser.id],
       distinct: true,
     );
 
@@ -288,6 +303,7 @@ class UserDatabase extends ChangeNotifier {
       'tsc_minute': transaction.date.minute,
       'tsc_amount': transaction.amount,
       'tsc_category': transaction.category,
+      'user_Id': activeUser.id,
     };
 
     await connection.transaction((txn) async {
@@ -304,6 +320,7 @@ class UserDatabase extends ChangeNotifier {
       'wl_name': wishlist.name,
       'wl_price': wishlist.price,
       'wl_estimated_purchase_date': wishlist.estimatedDate.month,
+      'user_Id': activeUser.id,
     };
     await connection.transaction((txn) async {
       await txn.insert('wishlists', wlRecordMap);
@@ -320,6 +337,7 @@ class UserDatabase extends ChangeNotifier {
       'bill_interest': bill.interest,
       'bill_due_date': bill.dueDate,
       'bill_interval': bill.dueDate,
+      'user_Id': activeUser.id,
     };
 
     await connection.transaction((txn) async {
@@ -332,7 +350,11 @@ class UserDatabase extends ChangeNotifier {
   /// Hapus wishlist dari database
   Future<void> deleteWishlist(int wlId) async {
     await connection.transaction((txn) async {
-      await txn.delete('wishlists', where: 'wl_Id = ?', whereArgs: [wlId]);
+      await txn.delete(
+        'wishlists',
+        where: 'wl_Id = ? AND user_Id = ?',
+        whereArgs: [wlId, activeUser.id],
+      );
     });
 
     notifyListeners();
@@ -341,7 +363,11 @@ class UserDatabase extends ChangeNotifier {
   /// Hapus bill dari database
   Future<void> deleteBill(int billId) async {
     await connection.transaction((txn) async {
-      await txn.delete('bills', where: 'rowid = ?', whereArgs: [billId]);
+      await txn.delete(
+        'bills',
+        where: 'rowid = ? AND user_Id',
+        whereArgs: [billId, activeUser.id],
+      );
     });
 
     notifyListeners();
