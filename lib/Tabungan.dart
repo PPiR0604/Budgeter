@@ -245,7 +245,7 @@ class _TabunganPageState extends State<TabunganPage> {
                           dataSource: expense,
                           color: Colors.red,
                           xValueMapper: (Chart tes, _) => tes.time,
-                          yValueMapper: (Chart tes, _) => tes.amount,
+                          yValueMapper: (Chart tes, _) => tes.amount * -1,
                         )
                       ],
                     );
@@ -253,23 +253,6 @@ class _TabunganPageState extends State<TabunganPage> {
                     return const Text('No data found'); // Jika data kosong
                   }
                 }),
-            SfCartesianChart(
-              primaryXAxis: const CategoryAxis(),
-              series: [
-                LineSeries<Chart, String>(
-                  dataSource: income,
-                  color: Colors.green,
-                  xValueMapper: (Chart tes, _) => tes.time,
-                  yValueMapper: (Chart tes, _) => tes.amount,
-                ),
-                LineSeries<Chart, String>(
-                  dataSource: expense,
-                  color: Colors.red,
-                  xValueMapper: (Chart tes, _) => tes.time,
-                  yValueMapper: (Chart tes, _) => tes.amount,
-                )
-              ],
-            )
           ],
         ),
       ),
