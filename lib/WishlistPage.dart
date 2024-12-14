@@ -3,7 +3,6 @@ import 'package:budgeter/components.dart';
 import 'package:budgeter/entities.dart';
 import 'package:budgeter/logic.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'settingPage.dart';
@@ -54,7 +53,7 @@ class _WishlistPageState extends State<WishlistPage> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+          icon: const Icon(Icons.person, color: Colors.white),
           iconSize: 40,
         ),
         actions: [
@@ -220,7 +219,7 @@ class Wish_List extends StatelessWidget {
                 .toList(),
           );
         } else {
-          return Center(child: Text("Wishlist Kosong"));
+          return const Center(child: Text("Wishlist Kosong"));
         }
       },
     );
@@ -265,7 +264,7 @@ class WishlistTable extends StatelessWidget {
                     final database = context.read<UserDatabase>();
                     database.deleteWishlist(wishlist.id!);
                   },
-                  child: Text(
+                  child: const Text(
                     "Selesai",
                     style: TextStyle(fontSize: 10),
                   ))

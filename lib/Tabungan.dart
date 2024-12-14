@@ -7,7 +7,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'settingPage.dart';
 
 class TabunganPage extends StatefulWidget {
-  TabunganPage({super.key});
+  const TabunganPage({super.key});
 
   @override
   State<TabunganPage> createState() => _TabunganPageState();
@@ -34,7 +34,7 @@ class _TabunganPageState extends State<TabunganPage> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+          icon: const Icon(Icons.person, color: Colors.white),
           iconSize: 40,
         ),
         actions: [
@@ -123,7 +123,7 @@ class _TabunganPageState extends State<TabunganPage> {
                                       'Error: ${snapshot.error}'); // Tampilkan error
                                 } else if (snapshot.hasData) {
                                   return Text(
-                                    "${currencyFormatter.format(snapshot.data)}",
+                                    currencyFormatter.format(snapshot.data),
                                     textAlign: TextAlign.center,
                                   ); // Tampilkan data
                                 } else {
@@ -165,7 +165,7 @@ class _TabunganPageState extends State<TabunganPage> {
                                     'Error: ${snapshot.error}'); // Tampilkan error
                               } else if (snapshot.hasData) {
                                 return Text(
-                                  "${currencyFormatter.format(snapshot.data)}",
+                                  currencyFormatter.format(snapshot.data),
                                   textAlign: TextAlign.center,
                                 ); // Tampilkan data
                               } else {

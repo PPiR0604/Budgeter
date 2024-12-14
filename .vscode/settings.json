@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/budgeter/linux"
+    "cmake.sourceDirectory": "D:/budgeter/linux",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

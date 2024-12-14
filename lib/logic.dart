@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:budgeter/entities.dart' as entity;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<void> createTables(Database connection, int version) async {
@@ -39,13 +38,13 @@ class UserDatabase extends ChangeNotifier {
     );
     var transactions = List<entity.User>.empty(growable: true);
     for (final {
-          'Id': _id as int,
-          'username': _name as String,
-          'email': _email as String,
-          'password': _password as String,
+          'Id': id as int,
+          'username': name as String,
+          'email': email as String,
+          'password': password0 as String,
         } in await query) {
       final transaction = entity.User.withId(
-          id: _id, username: _name, email: _email, password: _password);
+          id: id, username: name, email: email, password: password0);
 
       transactions.add(transaction);
     }
@@ -56,7 +55,7 @@ class UserDatabase extends ChangeNotifier {
   /// Ambil data transaksi untuk bulan dan tahun tertentu
   Future<List<entity.Transaction>> fetchTransactions(
       int month, int year, String? category) async {
-    final query;
+    final Future<List<Map<String, Object?>>> query;
     if (category != "") {
       query = connection.query(
         'transactions',
@@ -156,7 +155,6 @@ class UserDatabase extends ChangeNotifier {
         "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic AND tsc_day>=${now.day - 7} AND tsc_month = ${now.month}");
 
     if (temp[0]["HASIL"] == null) {
-      print("Sum NULL");
     } else {
       tes = temp[0]["HASIL"];
     }
@@ -174,7 +172,7 @@ class UserDatabase extends ChangeNotifier {
       logic = "AND tsc_amount<0";
     }
     List<Map> temp = await connection.rawQuery(
-        "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic AND tsc_year = ${year} AND tsc_month = ${month}");
+        "SELECT SUM(tsc_amount) AS HASIL FROM transactions WHERE user_id = ${activeUser.id} $logic AND tsc_year = $year AND tsc_month = $month");
 
     if (temp[0]["HASIL"] == null) {
     } else {

@@ -12,7 +12,7 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({required this.user, Key? key}) : super(key: key);
+  HomePage({required this.user, super.key});
   final currencyFormatter =
       NumberFormat.currency(locale: 'id_ID', symbol: 'Rp.');
   final User user;
@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
           centerTitle: true,
           leading: IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+            icon: const Icon(Icons.person, color: Colors.white),
             iconSize: 40,
           ),
           actions: [
@@ -89,7 +89,7 @@ class HomePage extends StatelessWidget {
   Container menuSection(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(left: 10, right: 10),
-        height: 200,
+        height: 240,
         decoration: BoxDecoration(
             color: Colors.black12, borderRadius: BorderRadius.circular(10)),
         child:
@@ -100,13 +100,15 @@ class HomePage extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => IncomePage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const IncomePage()));
                   },
                   child: const Column(
                     children: [
                       Icon(
-                        Icons.add,
+                        Icons.input_sharp,
                         size: 40,
                         color: Color.fromRGBO(63, 63, 63, 1),
                       ),
@@ -120,7 +122,7 @@ class HomePage extends StatelessWidget {
                   child: const Column(
                     children: [
                       Icon(
-                        Icons.input,
+                        Icons.output,
                         size: 40,
                       ),
                       Text("Pengeluaran")
@@ -135,8 +137,10 @@ class HomePage extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ReportPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReportPage()));
                   },
                   child: const Column(
                     children: [
@@ -161,7 +165,7 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TabunganPage()));
+                            builder: (context) => const TabunganPage()));
                   },
                   child: const Column(
                     children: [
@@ -199,7 +203,7 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   children: [
                     Icon(
-                      Icons.currency_exchange,
+                      Icons.school,
                       size: 40,
                       color: Color.fromRGBO(63, 63, 63, 1),
                     ),
@@ -209,6 +213,27 @@ class HomePage extends StatelessWidget {
               )
             ],
           ),
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () {},
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.receipt_long,
+                        size: 40,
+                        color: Color.fromRGBO(63, 63, 63, 1),
+                      ),
+                      Text("Tagihan")
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(child: Container()),
+              Expanded(child: Container()),
+            ],
+          )
         ]));
   }
 
@@ -249,7 +274,7 @@ class HomePage extends StatelessWidget {
                               'Error: ${snapshot.error}'); // Tampilkan error
                         } else if (snapshot.hasData) {
                           return Text(
-                            "${currencyFormatter.format(snapshot.data)}",
+                            currencyFormatter.format(snapshot.data),
                             textAlign: TextAlign.center,
                           ); // Tampilkan data
                         } else {
@@ -269,7 +294,7 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Outcome"),
+                const Text("Outcome"),
                 FutureBuilder<int>(
                     future: value.getsummary(2),
                     builder: (context, snapshot) {
@@ -280,7 +305,7 @@ class HomePage extends StatelessWidget {
                             'Error: ${snapshot.error}'); // Tampilkan error
                       } else if (snapshot.hasData) {
                         return Text(
-                          "${currencyFormatter.format(snapshot.data)}",
+                          currencyFormatter.format(snapshot.data),
                           textAlign: TextAlign.center,
                         ); // Tampilkan data
                       } else {
@@ -294,7 +319,7 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Balance"),
+                const Text("Balance"),
                 FutureBuilder<int>(
                     future: value.getsummary(0),
                     builder: (context, snapshot) {
@@ -305,7 +330,7 @@ class HomePage extends StatelessWidget {
                             'Error: ${snapshot.error}'); // Tampilkan error
                       } else if (snapshot.hasData) {
                         return Text(
-                          "${currencyFormatter.format(snapshot.data)}",
+                          currencyFormatter.format(snapshot.data),
                           textAlign: TextAlign.center,
                         ); // Tampilkan data
                       } else {

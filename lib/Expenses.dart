@@ -23,7 +23,7 @@ class ExpensesPage extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+          icon: const Icon(Icons.person, color: Colors.white),
           iconSize: 40,
         ),
         actions: [
@@ -48,6 +48,7 @@ class ExpensesPage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Padding(padding: EdgeInsets.only(right: 10)),
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -73,12 +74,6 @@ class ExpensesPage extends StatelessWidget {
             const SizedBox(height: 8),
             const TransactionInputSection(),
             const SizedBox(height: 16),
-            Text(
-              'Riwayat pengeluaran',
-              textAlign: TextAlign.left,
-              style: theme.textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
             const TransactionList(),
           ],
         ),
@@ -332,6 +327,7 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final currDate = DateTime.now();
     final value = context.watch<UserDatabase>();
 
@@ -340,11 +336,30 @@ class TransactionList extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(
-            children:
-                snapshot.data!.map((txn) => TransactionCard(tsc: txn)).toList(),
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Riwayat Pengeluaran',
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: snapshot.data!
+                    .map(
+                      (txn) => TransactionCard(tsc: txn),
+                    )
+                    .toList(),
+              ),
+            ],
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
@@ -366,67 +381,71 @@ class TransactionCard extends StatelessWidget {
     if (tsc.type == TransactionType.income) {
       return const SizedBox();
     }
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
+    return Column(
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
               children: [
-                Expanded(
-                  child: Text(
-                    dateFormatter.format(tsc.date),
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    timeFormatter.format(tsc.date),
-                    textAlign: TextAlign.end,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tsc.name,
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        tsc.category ?? 'No Category',
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        dateFormatter.format(tsc.date),
                         textAlign: TextAlign.start,
                         style: const TextStyle(fontSize: 12),
                       ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        timeFormatter.format(tsc.date),
+                        textAlign: TextAlign.end,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  currencyFormatter.format(tsc.amount),
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 18,
-                    color: tsc.type == TransactionType.expense
-                        ? Colors.red
-                        : Colors.black,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tsc.name,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            tsc.category ?? 'No Category',
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      currencyFormatter.format(tsc.amount),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
+                        color: tsc.type == TransactionType.expense
+                            ? Colors.red
+                            : Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

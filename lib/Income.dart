@@ -23,7 +23,7 @@ class IncomePage extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+          icon: const Icon(Icons.person, color: Colors.white),
           iconSize: 40,
         ),
         actions: [
@@ -48,6 +48,7 @@ class IncomePage extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Padding(padding: EdgeInsets.only(right: 10)),
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -73,15 +74,6 @@ class IncomePage extends StatelessWidget {
             const SizedBox(height: 8),
             const TransactionIncomeInputSection(),
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Riwayat Pemasukan',
-                textAlign: TextAlign.left,
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            const SizedBox(height: 8),
             const TransactionList(),
           ],
         ),
@@ -329,6 +321,7 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final currDate = DateTime.now();
     final value = context.watch<UserDatabase>();
 
@@ -337,11 +330,29 @@ class TransactionList extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Column(
-            children:
-                snapshot.data!.map((txn) => TransactionCard(tsc: txn)).toList(),
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Riwayat Pemasukan',
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Column(
+                children: snapshot.data!
+                    .map((txn) => TransactionCard(tsc: txn))
+                    .toList(),
+              ),
+            ],
           );
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

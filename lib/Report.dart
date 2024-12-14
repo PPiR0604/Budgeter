@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'settingPage.dart';
 
 class ReportPage extends StatefulWidget {
-  ReportPage({super.key});
+  const ReportPage({super.key});
 
   @override
   State<ReportPage> createState() => _ReportPageState();
@@ -86,7 +86,7 @@ class _ReportPageState extends State<ReportPage> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.account_box_rounded, color: Colors.white),
+          icon: const Icon(Icons.person, color: Colors.white),
           iconSize: 40,
         ),
         actions: [
@@ -142,7 +142,7 @@ class _ReportPageState extends State<ReportPage> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         } else if (snapshot.connectionState ==
                             ConnectionState.done) {
                           if (snapshot.hasError) {
@@ -456,7 +456,7 @@ class SummaryReportDetail extends StatelessWidget {
                               'Error: ${snapshot.error}'); // Tampilkan error
                         } else if (snapshot.hasData) {
                           return Text(
-                            "${currencyFormatter.format(snapshot.data)}",
+                            currencyFormatter.format(snapshot.data),
                             textAlign: TextAlign.center,
                           ); // Tampilkan data
                         } else {
@@ -491,7 +491,7 @@ class SummaryReportDetail extends StatelessWidget {
                             'Error: ${snapshot.error}'); // Tampilkan error
                       } else if (snapshot.hasData) {
                         return Text(
-                          "${currencyFormatter.format(snapshot.data)}",
+                          currencyFormatter.format(snapshot.data),
                           textAlign: TextAlign.center,
                         ); // Tampilkan data
                       } else {
@@ -582,7 +582,7 @@ class OutcomeTabelReport extends StatelessWidget {
             }).toList(),
           );
         } else {
-          return Center(child: const Text("Data Kosong"));
+          return const Center(child: Text("Data Kosong"));
         }
       },
     );
@@ -663,7 +663,7 @@ class IncomeTableReport extends StatelessWidget {
             }).toList(),
           );
         } else {
-          return Center(child: const Text("Kosong"));
+          return const Center(child: Text("Kosong"));
         }
       },
     );

@@ -5,18 +5,13 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(":app")
+    project.evaluationDependsOn(':app')
 }
-
-// android {
-//     ndkVersion = "27.0.12077973"
-// }
-
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir

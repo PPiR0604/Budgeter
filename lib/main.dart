@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  LoginPage(BuildContext context, {super.key});
+  const LoginPage(BuildContext context, {super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegisterPage()));
+                            builder: (context) => const RegisterPage()));
                   },
                   style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(Colors.white70)),
@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({super.key});
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
