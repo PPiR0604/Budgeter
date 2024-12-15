@@ -128,7 +128,7 @@ class _ReportPageState extends State<ReportPage> {
                 Container(
                     margin: const EdgeInsets.only(left: 15),
                     child: const Text(
-                      "Summary",
+                      "Laporan Keuangan",
                       style: TextStyle(fontSize: 25),
                     )),
                 Container(
@@ -142,7 +142,8 @@ class _ReportPageState extends State<ReportPage> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (snapshot.connectionState ==
                             ConnectionState.done) {
                           if (snapshot.hasError) {

@@ -1,4 +1,5 @@
 {
     "cmake.sourceDirectory": "D:/budgeter/linux",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.search.scope": "all"
 }
