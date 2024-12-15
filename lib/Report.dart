@@ -128,7 +128,7 @@ class _ReportPageState extends State<ReportPage> {
                 Container(
                     margin: const EdgeInsets.only(left: 15),
                     child: const Text(
-                      "Laporan Keuangan",
+                      "Summary",
                       style: TextStyle(fontSize: 25),
                     )),
                 Container(
